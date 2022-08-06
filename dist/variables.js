@@ -33,6 +33,7 @@ class Variables {
         this.updateDefinitions = () => {
             let basiscs = [];
             // The basics
+            basiscs.push({ label: `Latest command`, name: `LatestCommand` });
             basiscs.push({ label: `PauseButtonLabel`, name: `PauseButtonLabel` });
             basiscs.push({ label: `ButtonLabel`, name: `ButtonLabel` });
             basiscs.push({ label: `Mute`, name: `Mute` });
@@ -54,6 +55,7 @@ class Variables {
          */
         this.updateVariables = () => {
             const newVariables = {};
+            newVariables[`LatestCommand`] = this.instance.basicInfoObj.latestCommand;
             newVariables[`PauseButtonLabel`] = this.instance.basicInfoObj.PauseButtonLabel;
             newVariables[`ButtonLabel`] = this.instance.basicInfoObj.ButtonLabel;
             newVariables[`Mute`] = this.instance.basicInfoObj.Mute;

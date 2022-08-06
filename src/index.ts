@@ -21,8 +21,9 @@ class EcammLiveInstance extends instance_skel<Config> {
 	// Global call settings
 	public variables: Variables | null = null
 	public HTTP: HTTP | null = null
-	
+
 	public basicInfoObj: {
+		latestCommand: string
 		PauseButtonLabel: string
 		ButtonLabel: string
 		Mute: string
@@ -37,7 +38,10 @@ class EcammLiveInstance extends instance_skel<Config> {
 		LiveDemo: string
 		Viewers: number
 		MUTE_MOVIE: string
+		defaultCamera: string
+		currentSourceMode: string
 	} = {
+		latestCommand: 'getInfo',
 		PauseButtonLabel: 'no info',
 		ButtonLabel: 'no info',
 		Mute: 'no',
@@ -52,7 +56,37 @@ class EcammLiveInstance extends instance_skel<Config> {
 		LiveDemo: 'no',
 		Viewers: 0,
 		MUTE_MOVIE: 'no',
+		defaultCamera: '',
+		currentSourceMode: 'no info',
 	}
+
+	public sceneList: {
+		Locked: boolean
+		AutoGroupTimeInterval: number
+		SceneSoundVolume: number
+		SceneSoundStop: boolean
+		title: string
+		UUID: string
+		AutoGroup: boolean
+		AutoGroupRandom: boolean
+		Children: []
+		LastAspect: string
+		CURRENT: boolean
+	}[] = []
+
+	public cameraList: {
+		title: string
+		UUID: string
+	}[] = []
+
+	public videoList: {
+		title: string
+		UUID: string
+	}[] = []
+
+	public overlayList: {
+		items: []
+	} = { items: [] }
 
 	constructor(system: CompanionSystem, id: string, config: Config) {
 		super(system, id, config)
@@ -66,8 +100,8 @@ class EcammLiveInstance extends instance_skel<Config> {
 	public init(): void {
 		this.log('info', `Welcome, module is loading`)
 		this.status(this.STATUS_WARNING, 'Connecting')
-		this.HTTP = new HTTP(this)
 		this.variables = new Variables(this)
+		this.HTTP = new HTTP(this)
 		this.updateInstance()
 	}
 

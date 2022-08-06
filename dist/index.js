@@ -16,6 +16,7 @@ class EcammLiveInstance extends instance_skel {
         this.variables = null;
         this.HTTP = null;
         this.basicInfoObj = {
+            latestCommand: 'getInfo',
             PauseButtonLabel: 'no info',
             ButtonLabel: 'no info',
             Mute: 'no',
@@ -30,7 +31,13 @@ class EcammLiveInstance extends instance_skel {
             LiveDemo: 'no',
             Viewers: 0,
             MUTE_MOVIE: 'no',
+            defaultCamera: '',
+            currentSourceMode: 'no info',
         };
+        this.sceneList = [];
+        this.cameraList = [];
+        this.videoList = [];
+        this.overlayList = { items: [] };
         /**
          * @returns config options
          * @description generates the config options available for this instance
@@ -53,8 +60,8 @@ class EcammLiveInstance extends instance_skel {
     init() {
         this.log('info', `Welcome, module is loading`);
         this.status(this.STATUS_WARNING, 'Connecting');
-        this.HTTP = new http_1.HTTP(this);
         this.variables = new variables_1.Variables(this);
+        this.HTTP = new http_1.HTTP(this);
         this.updateInstance();
     }
     /**

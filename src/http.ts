@@ -33,14 +33,7 @@ export class HTTP {
 	 */
 	public readonly Connect = () => {
 		let p = new Promise((resolve, reject) => {
-			///////
 			try {
-				// // browse for all http services
-				// bonjour
-				// 	.find({ type: 'http' }, (service: { port: string; host: number }) => {
-				// 		console.log('Found an HTTP server:', service)
-				// 		resolve('ready for HTTP requests')
-				// 	})
 				console.log('Search for ecamm live')
 
 				bonjour.find({ type: 'ecammliveremote' }, (service: { host: string; port: number }) => {
@@ -61,27 +54,93 @@ export class HTTP {
 	private processData = (data: string) => {
 		try {
 			let received = JSON.parse(data)
-			console.log('received', received)
-			if (received.isArray()) {
-				if (received[0] === 'Done') {
-					console.log('Command succesfull')
-					this.sendCommand('getInfo')
-				}
+			switch (this.instance.basicInfoObj.latestCommand) {
+				case 'getInfo':
+					this.instance.basicInfoObj.PauseButtonLabel = received.PauseButtonLabel
+					this.instance.basicInfoObj.ButtonLabel = received.ButtonLabel
+					this.instance.basicInfoObj.Mute = received.Mute
+					this.instance.basicInfoObj.VOLUME_MOVIE = received.VOLUME_MOVIE
+					this.instance.basicInfoObj.MUTE_SOUNDEFFECTS = received.MUTE_SOUNDEFFECTS
+					this.instance.basicInfoObj.MUTE_MIC = received.MUTE_MIC
+					this.instance.basicInfoObj.VOLUME_MIC = received.VOLUME_MIC
+					this.instance.basicInfoObj.CurrentScene = received.CurrentScene
+					this.instance.basicInfoObj.PreviewMode = received.PreviewMode
+					this.instance.basicInfoObj.HidingUI = received.HidingUI
+					this.instance.basicInfoObj.VOLUME_SOUNDEFFECTS = received.VOLUME_SOUNDEFFECTS
+					this.instance.basicInfoObj.LiveDemo = received.LiveDemo
+					this.instance.basicInfoObj.Viewers = received.Viewers
+					this.instance.basicInfoObj.MUTE_MOVIE = received.MUTE_MOVIE
+					this.instance.variables?.updateVariables()
+					break
+				case 'getButtonLabel':
+					this.instance.basicInfoObj.ButtonLabel = received[0]
+					this.instance.variables?.updateVariables()
+					break
+				case 'getPauseButtonLabel':
+					this.instance.basicInfoObj.PauseButtonLabel = received[0]
+					this.instance.variables?.updateVariables()
+					break
+				case 'getSceneList':
+					this.instance.sceneList.length = 0
+					this.instance.sceneList = received.items
+					break
+				case 'getSceneImage':
+					// do nothing for now
+					break
+				case 'getCurrentScene':
+					this.instance.basicInfoObj.CurrentScene = received[0]
+					this.instance.variables?.updateVariables()
+					break
+				case 'getMute':
+					this.instance.basicInfoObj.Mute = received[0]
+					this.instance.variables?.updateVariables()
+					break
+				case 'getViewers':
+					this.instance.basicInfoObj.Viewers = parseInt(received[0])
+					this.instance.variables?.updateVariables()
+					break
+				case 'getInputs':
+					this.instance.cameraList.length = 0
+					this.instance.cameraList = received.items
+					break
+				case 'getDefaultCamera':
+					this.instance.basicInfoObj.defaultCamera = received[0]
+					this.instance.variables?.updateVariables()
+					break
+				case 'getCurrentMode':
+					this.instance.basicInfoObj.currentSourceMode = received[0]
+					this.instance.variables?.updateVariables()
+					break
+				case 'getVideoList':
+					this.instance.videoList.length = 0
+					this.instance.videoList = received.items
+					break
+				case 'getVideoImage':
+					// Do nothing
+					break
+				case 'getOverlayList':
+					this.instance.overlayList.items.length = 0
+					this.instance.overlayList = received
+					break
+					// case 'getOverlayImage':
+					// 	// TODO
+					// 	break
+					// case 'getSoundList':
+					// 	// TODO	
+					// 	break
+					default:
+						console.log('unknown command or need to fill in:', this.instance.basicInfoObj.latestCommand)
+						console.log('received:',received);
+					break
 			}
-			if (received.PauseButtonLabel) this.instance.basicInfoObj.PauseButtonLabel = received.PauseButtonLabel
-			if (received.ButtonLabel) this.instance.basicInfoObj.ButtonLabel = received.ButtonLabel
-			if (received.Mute) this.instance.basicInfoObj.Mute = received.Mute
-			if (received.VOLUME_MOVIE) this.instance.basicInfoObj.VOLUME_MOVIE = received.VOLUME_MOVIE
-			if (received.MUTE_SOUNDEFFECTS) this.instance.basicInfoObj.MUTE_SOUNDEFFECTS = received.MUTE_SOUNDEFFECTS
-			if (received.MUTE_MIC) this.instance.basicInfoObj.MUTE_MIC = received.MUTE_MIC
-			if (received.VOLUME_MIC) this.instance.basicInfoObj.VOLUME_MIC = received.VOLUME_MIC
-			if (received.CurrentScene) this.instance.basicInfoObj.CurrentScene = received.CurrentScene
-			if (received.PreviewMode) this.instance.basicInfoObj.PreviewMode = received.PreviewMode
-			if (received.HidingUI) this.instance.basicInfoObj.HidingUI = received.HidingUI
-			if (received.VOLUME_SOUNDEFFECTS) this.instance.basicInfoObj.VOLUME_SOUNDEFFECTS = received.VOLUME_SOUNDEFFECTS
-			if (received.LiveDemo) this.instance.basicInfoObj.LiveDemo = received.LiveDemo
-			if (received.Viewers) this.instance.basicInfoObj.Viewers = received.Viewers
-			if (received.MUTE_MOVIE) this.instance.basicInfoObj.MUTE_MOVIE = received.MUTE_MOVIE
+			
+			// if (received.isArray()) {
+			// 	if (received[0] === 'Done') {
+			// 		console.log('Command succesfull')
+			// 		this.sendCommand('getInfo')
+			// 	}
+			// }
+
 			this.instance.updateVariables()
 		} catch (err) {
 			console.error(err)
