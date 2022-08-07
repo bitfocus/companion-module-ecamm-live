@@ -65,6 +65,7 @@ class HTTP {
                     case 'getSceneList':
                         this.instance.sceneList.length = 0;
                         this.instance.sceneList = received.items;
+                        this.instance.updateInstance();
                         break;
                     case 'getSceneImage':
                         // do nothing for now

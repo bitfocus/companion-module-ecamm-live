@@ -54,6 +54,8 @@ export class HTTP {
 	private processData = (data: string) => {
 		try {
 			let received = JSON.parse(data)
+			console.log('received',received);
+			
 			switch (this.instance.basicInfoObj.latestCommand) {
 				case 'getInfo':
 					this.instance.basicInfoObj.PauseButtonLabel = received.PauseButtonLabel
@@ -83,6 +85,7 @@ export class HTTP {
 				case 'getSceneList':
 					this.instance.sceneList.length = 0
 					this.instance.sceneList = received.items
+					this.instance.updateInstance()
 					break
 				case 'getSceneImage':
 					// do nothing for now

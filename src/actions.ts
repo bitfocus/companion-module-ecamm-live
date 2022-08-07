@@ -82,6 +82,16 @@ type InputFieldWithDefault = Exclude<SomeCompanionInputField, 'default'> & { def
  * @returns CompanionActions
  */
 export function getActions(instance: EcammLiveInstance): CompanionActions {
+	let CHOICES_SCENES: { id: string; label: string }[] =
+		instance.sceneList.length === 0 ? [{ id: 'none', label: 'no scenes loaded' }] : []
+	instance.sceneList.forEach((scene) => {
+		CHOICES_SCENES.push({ id: scene.UUID, label: scene.title })
+	})
+	let CHOICES_CAMERA: { id: string; label: string }[] =
+		instance.cameraList.length === 0 ? [{ id: 'none', label: 'no inputs loaded' }] : []
+	instance.cameraList.forEach((camera) => {
+		CHOICES_CAMERA.push({ id: camera.UUID, label: camera.title })
+	})
 	/**
 	 * Construct the command like I want and send it to the OSC
 	 * @param action
@@ -167,7 +177,7 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 		},
 		// Scenes
 		getSceneList: {
-			label: 'Get Scenes info',
+			label: 'Get Scene list',
 			options: [],
 			callback: () => {
 				const sendToCommand: any = {
@@ -180,27 +190,27 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 				sendActionCommand(sendToCommand)
 			},
 		},
-		getSceneImage: {
-			label: 'Get the Scenes last thumbnail image',
-			options: [
-				{
-					type: 'textinput',
-					label: 'UUID',
-					id: 'UUID',
-					default: '',
-				},
-			],
-			callback: (action) => {
-				const sendToCommand: any = {
-					id: 'getSceneImage',
-					options: {
-						command: `getSceneImage/${action.options.UUID}`,
-					},
-				}
-				instance.basicInfoObj.latestCommand = 'getSceneImage'
-				sendActionCommand(sendToCommand)
-			},
-		},
+		// getSceneImage: {
+		// 	label: 'Get the Scenes last thumbnail image',
+		// 	options: [
+		// 		{
+		// 			type: 'textinput',
+		// 			label: 'UUID',
+		// 			id: 'UUID',
+		// 			default: '',
+		// 		},
+		// 	],
+		// 	callback: (action) => {
+		// 		const sendToCommand: any = {
+		// 			id: 'getSceneImage',
+		// 			options: {
+		// 				command: `getSceneImage/${action.options.UUID}`,
+		// 			},
+		// 		}
+		// 		instance.basicInfoObj.latestCommand = 'getSceneImage'
+		// 		sendActionCommand(sendToCommand)
+		// 	},
+		// },
 		getCurrentScene: {
 			label: 'Get UUID of the current Scene',
 			options: [],
@@ -219,17 +229,18 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 			label: 'Switch to a Scene',
 			options: [
 				{
-					type: 'textinput',
-					label: 'UUID',
+					type: 'dropdown',
+					label: 'Scene',
 					id: 'UUID',
-					default: '',
+					choices: CHOICES_SCENES,
+					default: CHOICES_SCENES[0].id,
 				},
 			],
 			callback: (action) => {
 				const sendToCommand: any = {
 					id: 'setScene',
 					options: {
-						command: `setScene/${action.options.UUID}`,
+						command: `setScene?id=${action.options.UUID}`,
 					},
 				}
 				instance.basicInfoObj.latestCommand = 'setScene'
@@ -324,7 +335,7 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 			},
 		},
 		getDefaultCamera: {
-			label: 'Get UUID of the default camera',
+			label: 'Get default camera',
 			options: [],
 			callback: () => {
 				const sendToCommand: any = {
@@ -338,13 +349,21 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 			},
 		},
 		setInput: {
-			label: 'Set UUID of a camera to use',
-			options: [],
-			callback: () => {
+			label: 'Set camera input to use',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Camera input',
+					id: 'UUID',
+					choices: CHOICES_CAMERA,
+					default: CHOICES_CAMERA[0].id,
+				},
+			],
+			callback: (action) => {
 				const sendToCommand: any = {
 					id: 'setInput',
 					options: {
-						command: `setInput`,
+						command: `setInput?id=${action.options.UUID}`,
 					},
 				}
 				instance.basicInfoObj.latestCommand = 'setInput'
@@ -458,27 +477,27 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 				sendActionCommand(sendToCommand)
 			},
 		},
-		getOverlayImage: {
-			label: 'Get icon: The Overlay’s thumbnail image',
-			options: [
-				{
-					type: 'textinput',
-					label: 'Overlay UUID',
-					id: 'UUID',
-					default: '',
-				},
-			],
-			callback: () => {
-				const sendToCommand: any = {
-					id: 'getOverlayImage',
-					options: {
-						command: `getOverlayImage`,
-					},
-				}
-				instance.basicInfoObj.latestCommand = 'getOverlayImage'
-				sendActionCommand(sendToCommand)
-			},
-		},
+		// getOverlayImage: {
+		// 	label: 'Get icon: The Overlay’s thumbnail image',
+		// 	options: [
+		// 		{
+		// 			type: 'textinput',
+		// 			label: 'Overlay UUID',
+		// 			id: 'UUID',
+		// 			default: '',
+		// 		},
+		// 	],
+		// 	callback: () => {
+		// 		const sendToCommand: any = {
+		// 			id: 'getOverlayImage',
+		// 			options: {
+		// 				command: `getOverlayImage`,
+		// 			},
+		// 		}
+		// 		instance.basicInfoObj.latestCommand = 'getOverlayImage'
+		// 		sendActionCommand(sendToCommand)
+		// 	},
+		// },
 		setOverlay: {
 			label: 'Toggle an overlays visibility.',
 			options: [
