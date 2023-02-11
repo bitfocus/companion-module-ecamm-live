@@ -1,5 +1,5 @@
 import { request } from 'urllib'
-import { UUID } from 'uuid-generator-ts'
+import { Uuid, UuidOptions } from 'node-ts-uuid'
 import { InstanceStatus } from '@companion-module/base'
 import { Config, InstanceBaseExt } from './config'
 const bonjour = require('bonjour')()
@@ -8,11 +8,9 @@ export class HTTP {
 	private instance: InstanceBaseExt<Config>
 	private host: string = ''
 	private port: number = 0
-	public uuid: UUID
 
 	constructor(instance: InstanceBaseExt<Config>) {
 		this.instance = instance
-		this.uuid = new UUID()
 
 		// Connect
 		this.Connect()
@@ -32,6 +30,19 @@ export class HTTP {
 	 */
 	public readonly destroy = (): void => {}
 
+	/**
+	 *
+	 * @returns uuid
+	 */
+	getUuid() {
+		const options: UuidOptions = {
+			length: 25,
+			prefix: 'companion-',
+		}
+		const uuid: string = Uuid.generate(options)
+		this.instance.log('debug',uuid)
+		return uuid
+	}
 	/**
 	 * @description Do a check
 	 */
@@ -163,7 +174,7 @@ export class HTTP {
 		const { data } = await request(`http://${this.host}:${this.port}/${command}`, {
 			headers: {
 				'User-Agent': 'Companion/version3',
-				'EcammLive-UUID': this.uuid.toString(),
+				'EcammLive-UUID': this.getUuid(),
 				'EcammLive-ClientName': 'Companion',
 			},
 		})
