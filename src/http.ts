@@ -15,7 +15,7 @@ export class HTTP {
 		this.Connect()
 			.then(() => {
 				this.instance.updateStatus(InstanceStatus.Ok)
-				this.instance.log('debug','Ecamm Live active')
+				this.instance.log('debug', 'Ecamm Live active')
 				this.sendCommand('getInfo')
 			})
 			.catch(() => {
@@ -35,12 +35,12 @@ export class HTTP {
 	public readonly Connect = () => {
 		let p = new Promise((resolve, reject) => {
 			try {
-				this.instance.log('debug','Search for ecamm live')
+				this.instance.log('debug', 'Search for ecamm live')
 
 				bonjour.find({ type: 'ecammliveremote' }, (service: { host: string; port: number }) => {
 					this.host = service.host
 					this.port = service.port
-					this.instance.log('debug',`Connection info:, ${this.host}, ${this.port}`)
+					this.instance.log('debug', `Connection info:, ${this.host}, ${this.port}`)
 
 					resolve('ready for HTTP requests')
 				})
@@ -55,8 +55,8 @@ export class HTTP {
 	private processData = (data: string) => {
 		try {
 			let received = JSON.parse(data)
-			this.instance.log('debug',`Received, ${JSON.stringify(received)}`);
-			
+			this.instance.log('debug', `Received, ${JSON.stringify(received)}`)
+
 			switch (this.instance.basicInfoObj.latestCommand) {
 				case 'getInfo':
 					this.instance.basicInfoObj.PauseButtonLabel = received.PauseButtonLabel
@@ -126,18 +126,18 @@ export class HTTP {
 					this.instance.overlayList.items.length = 0
 					this.instance.overlayList = received
 					break
-					// case 'getOverlayImage':
-					// 	// TODO
-					// 	break
-					// case 'getSoundList':
-					// 	// TODO	
-					// 	break
-					default:
-						console.log('unknown command or need to fill in:', this.instance.basicInfoObj.latestCommand)
-						console.log('received:',received);
+				// case 'getOverlayImage':
+				// 	// TODO
+				// 	break
+				// case 'getSoundList':
+				// 	// TODO
+				// 	break
+				default:
+					console.log('Received unknown response:', this.instance.basicInfoObj.latestCommand)
+					console.log('received:', received)
 					break
 			}
-			
+
 			// if (received.isArray()) {
 			// 	if (received[0] === 'Done') {
 			// 		console.log('Command succesfull')
@@ -156,7 +156,7 @@ export class HTTP {
 	 * @description Check OSC connection status and format command
 	 */
 	public readonly sendCommand = async (command: string): Promise<void> => {
-		this.instance.log('debug',`sending: http://${this.host}:${this.port}/${command}`)
+		this.instance.log('debug', `sending: http://${this.host}:${this.port}/${command}`)
 		const { data } = await request(`http://${this.host}:${this.port}/${command}`)
 		this.processData(data.toString())
 	}
