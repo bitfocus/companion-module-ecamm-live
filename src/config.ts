@@ -1,13 +1,14 @@
-import { SomeCompanionConfigField } from '../../../instance_skel_types'
+import { SomeCompanionConfigField } from '@companion-module/base'
+
 
 export interface Config {
 	label: string
 }
 
-export const getConfigFields = (): SomeCompanionConfigField[] => {
+export function GetConfigFields(): SomeCompanionConfigField[] {
 	return [
 		{
-			type: 'text',
+			type: 'static-text',
 			id: 'text',
 			label: 'Ecamm Live',
 			value: 'When Ecamm live is running, no need to check these settings',

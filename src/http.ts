@@ -1,5 +1,6 @@
 import EcammLiveInstance from '.'
 import { request } from 'urllib'
+import { InstanceStatus } from '@companion-module/base'
 const bonjour = require('bonjour')()
 
 export class HTTP {
@@ -13,13 +14,13 @@ export class HTTP {
 		// Connect
 		this.Connect()
 			.then(() => {
-				this.instance.status(this.instance.STATUS_OK)
-				console.log('Ecamm Live active')
+				this.instance.updateStatus(InstanceStatus.Ok)
+				this.instance.log('debug','Ecamm Live active')
 				this.sendCommand('getInfo')
 			})
 			.catch(() => {
 				this.instance.log('warn', `Unable to connect, please configure a host and port in the instance configuration`)
-				this.instance.status(this.instance.STATUS_ERROR, 'wrong settings')
+				this.instance.updateStatus(InstanceStatus.UnknownWarning, 'wrong settings')
 			})
 	}
 
@@ -34,12 +35,12 @@ export class HTTP {
 	public readonly Connect = () => {
 		let p = new Promise((resolve, reject) => {
 			try {
-				console.log('Search for ecamm live')
+				this.instance.log('debug','Search for ecamm live')
 
 				bonjour.find({ type: 'ecammliveremote' }, (service: { host: string; port: number }) => {
 					this.host = service.host
 					this.port = service.port
-					console.log('connection info', this.host, this.port)
+					this.instance.log('debug',`Connection info:, ${this.host}, ${this.port}`)
 
 					resolve('ready for HTTP requests')
 				})
@@ -54,7 +55,7 @@ export class HTTP {
 	private processData = (data: string) => {
 		try {
 			let received = JSON.parse(data)
-			console.log('received',received);
+			this.instance.log('debug',`Received, ${received}`);
 			
 			switch (this.instance.basicInfoObj.latestCommand) {
 				case 'getInfo':
@@ -72,15 +73,15 @@ export class HTTP {
 					this.instance.basicInfoObj.LiveDemo = received.LiveDemo
 					this.instance.basicInfoObj.Viewers = received.Viewers
 					this.instance.basicInfoObj.MUTE_MOVIE = received.MUTE_MOVIE
-					this.instance.variables?.updateVariables()
+					this.instance.updateVariableValues()
 					break
 				case 'getButtonLabel':
 					this.instance.basicInfoObj.ButtonLabel = received[0]
-					this.instance.variables?.updateVariables()
+					this.instance.updateVariableValues()
 					break
 				case 'getPauseButtonLabel':
 					this.instance.basicInfoObj.PauseButtonLabel = received[0]
-					this.instance.variables?.updateVariables()
+					this.instance.updateVariableValues()
 					break
 				case 'getSceneList':
 					this.instance.sceneList.length = 0
@@ -92,15 +93,15 @@ export class HTTP {
 					break
 				case 'getCurrentScene':
 					this.instance.basicInfoObj.CurrentScene = received[0]
-					this.instance.variables?.updateVariables()
+					this.instance.updateVariableValues()
 					break
 				case 'getMute':
 					this.instance.basicInfoObj.Mute = received[0]
-					this.instance.variables?.updateVariables()
+					this.instance.updateVariableValues()
 					break
 				case 'getViewers':
 					this.instance.basicInfoObj.Viewers = parseInt(received[0])
-					this.instance.variables?.updateVariables()
+					this.instance.updateVariableValues()
 					break
 				case 'getInputs':
 					this.instance.cameraList.length = 0
@@ -108,11 +109,11 @@ export class HTTP {
 					break
 				case 'getDefaultCamera':
 					this.instance.basicInfoObj.defaultCamera = received[0]
-					this.instance.variables?.updateVariables()
+					this.instance.updateVariableValues()
 					break
 				case 'getCurrentMode':
 					this.instance.basicInfoObj.currentSourceMode = received[0]
-					this.instance.variables?.updateVariables()
+					this.instance.updateVariableValues()
 					break
 				case 'getVideoList':
 					this.instance.videoList.length = 0
@@ -155,7 +156,7 @@ export class HTTP {
 	 * @description Check OSC connection status and format command
 	 */
 	public readonly sendCommand = async (command: string): Promise<void> => {
-		console.log(`sending: http://${this.host}:${this.port}/${command}`)
+		this.instance.log('debug',`sending: http://${this.host}:${this.port}/${command}`)
 		const { data } = await request(`http://${this.host}:${this.port}/${command}`)
 		this.processData(data.toString())
 	}
@@ -167,12 +168,12 @@ export class HTTP {
 		bonjour.destroy()
 		this.Connect()
 			.then(() => {
-				this.instance.status(this.instance.STATUS_OK)
+				this.instance.updateStatus(InstanceStatus.Ok)
 				console.log('Ecamm Live active')
 			})
 			.catch(() => {
 				this.instance.log('warn', `Unable to connect, please configure a host and port in the instance configuration`)
-				this.instance.status(this.instance.STATUS_ERROR, 'wrong settings')
+				this.instance.updateStatus(InstanceStatus.UnknownWarning, 'wrong settings')
 			})
 	}
 }

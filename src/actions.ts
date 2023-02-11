@@ -1,87 +1,47 @@
-import {
-	CompanionActionEventInfo,
-	CompanionActionEvent,
-	SomeCompanionInputField,
-	CompanionActions,
-} from '../../../instance_skel_types'
+import { CompanionActionDefinition, CompanionActionDefinitions, CompanionActionEvent } from '@companion-module/base'
 import EcammLiveInstance from './index'
 
-/**
- * Define what is needed
- */
-interface actionExtraCallback {
-	action: string
-	options: Readonly<{
-		command: string
-		UUID?: string
-		volume?: string
-		behaviour?: string
-		mode?: string
-	}>
+export enum EcammLiveActions {
+	getSceneImage = 'getSceneImage',
+	setScene = 'setScene',
+	setInput = 'setInput',
+	setMode = 'setMode',
+	setVideo = 'setVideo',
+	// getVideoImage= 'getVideoImage',
+	getOverlayImage = 'getOverlayImage',
+	getDefaultCamera = 'getDefaultCamera',
+	setOverlay = 'setOverlay',
+	setSoundVolume = 'setSoundVolume',
+	getInfo = 'getInfo',
+	getButtonLabel = 'getButtonLabel',
+	getPauseButtonLabel = 'getPauseButtonLabel',
+	setClickButton = 'setClickButton',
+	setClickPauseButton = 'setClickPauseButton',
+	getSceneList = 'getSceneList',
+	getCurrentScene = 'getCurrentScene',
+	setNext = 'setNext',
+	setPrev = 'setPrev',
+	getMute = 'getMute',
+	setMute = 'setMute',
+	getViewers = 'getViewers',
+	getInputs = 'getInputs',
+	getCurrentMode = 'getCurrentMode',
+	setPIP = 'setPIP',
+	setPIPsetPIP = 'setPIPsetPIP',
+	getVideoList = 'getVideoList',
+	getOverlayList = 'getOverlayList',
+	setHideComment = 'setHideComment',
+	getSoundList = 'getSoundList',
+	setSound = 'setSound',
+	setSoundStop = 'setSoundStop',
 }
-interface actionCallback {
-	action: string
-	options: Readonly<{
-		command: string
-	}>
-}
-export interface EcammLiveActions {
-	getSceneImage: EcammLiveAction<actionExtraCallback>
-	setScene: EcammLiveAction<actionExtraCallback>
-	setInput: EcammLiveAction<actionExtraCallback>
-	setMode: EcammLiveAction<actionExtraCallback>
-	setVideo: EcammLiveAction<actionExtraCallback>
-	// getVideoImage: EcammLiveAction<actionExtraCallback>
-	getOverlayImage: EcammLiveAction<actionExtraCallback>
-	setOverlay: EcammLiveAction<actionExtraCallback>
-	setSoundVolume: EcammLiveAction<actionExtraCallback>
-	getInfo: EcammLiveAction<actionCallback>
-	getButtonLabel: EcammLiveAction<actionCallback>
-	getPauseButtonLabel: EcammLiveAction<actionCallback>
-	setClickButton: EcammLiveAction<actionCallback>
-	setClickPauseButton: EcammLiveAction<actionCallback>
-	getSceneList: EcammLiveAction<actionCallback>
-	getCurrentScene: EcammLiveAction<actionCallback>
-	setNext: EcammLiveAction<actionCallback>
-	setPrev: EcammLiveAction<actionCallback>
-	getMute: EcammLiveAction<actionCallback>
-	setMute: EcammLiveAction<actionCallback>
-	getViewers: EcammLiveAction<actionCallback>
-	getInputs: EcammLiveAction<actionCallback>
-	getCurrentMode: EcammLiveAction<actionCallback>
-	setPIP: EcammLiveAction<actionCallback>
-	getVideoList: EcammLiveAction<actionCallback>
-	getOverlayList: EcammLiveAction<actionCallback>
-	setHideComment: EcammLiveAction<actionCallback>
-	getSoundList: EcammLiveAction<actionCallback>
-	setSound: EcammLiveAction<actionExtraCallback>
-	setSoundStop: EcammLiveAction<actionCallback>
-}
-
-export type ActionCallbacks = actionExtraCallback | actionCallback
-
-// Actions specific to EcammLive
-export interface EcammLiveAction<T> {
-	label: string
-	description?: string
-	options: InputFieldWithDefault[]
-	callback: (
-		action: Readonly<Omit<CompanionActionEvent, 'options' | 'id'> & T>,
-		info: Readonly<CompanionActionEventInfo | null>
-	) => void
-	subscribe?: (action: Readonly<Omit<CompanionActionEvent, 'options' | 'id'> & T>) => void
-	unsubscribe?: (action: Readonly<Omit<CompanionActionEvent, 'options' | 'id'> & T>) => void
-}
-
-// Force options to have a default to prevent sending undefined values
-type InputFieldWithDefault = Exclude<SomeCompanionInputField, 'default'> & { default: string | number | boolean | null }
 
 /**
  * Main function to create the actions
  * @param instance Give the instance so we can extract data
  * @returns CompanionActions
  */
-export function getActions(instance: EcammLiveInstance): CompanionActions {
+export function GetActions(instance: EcammLiveInstance): CompanionActionDefinitions {
 	let CHOICES_SCENES: { id: string; label: string }[] =
 		instance.sceneList.length === 0 ? [{ id: 'none', label: 'no scenes loaded' }] : []
 	instance.sceneList.forEach((scene) => {
@@ -92,21 +52,25 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 	instance.cameraList.forEach((camera) => {
 		CHOICES_CAMERA.push({ id: camera.UUID, label: camera.title })
 	})
+	
 	/**
 	 * Construct the command like I want and send it to the OSC
 	 * @param action
 	 * @param _info
 	 */
-	const sendActionCommand = (action: Readonly<ActionCallbacks>, _info?: CompanionActionEventInfo | null): void => {
+	 const sendActionCommand = (
+		action: { options: { command: any; args: any } },
+		_info?: CompanionActionEvent | null
+	): void => {
 		// Construct command
 		let command = action.options.command
 		if (instance.HTTP) instance.HTTP.sendCommand(command)
 	}
 
-	return {
+	const actions: { [id in EcammLiveActions]: CompanionActionDefinition | undefined } = {
 		// Display Info
 		getInfo: {
-			label: 'Get standard info',
+			name: 'Get standard info',
 			options: [],
 			callback: () => {
 				const sendToCommand: any = {
@@ -114,13 +78,13 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 					options: {
 						command: `getInfo`,
 					},
-				}
-				instance.basicInfoObj.latestCommand = 'getInfo'
-				sendActionCommand(sendToCommand)
+				};
+				instance.basicInfoObj.latestCommand = 'getInfo';
+				sendActionCommand(sendToCommand);
 			},
 		},
 		getButtonLabel: {
-			label: 'Get Label for Start button',
+			name: 'Get Label for Start button',
 			options: [],
 			callback: () => {
 				const sendToCommand: any = {
@@ -128,13 +92,13 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 					options: {
 						command: `getButtonLabel`,
 					},
-				}
-				instance.basicInfoObj.latestCommand = 'getButtonLabel'
-				sendActionCommand(sendToCommand)
+				};
+				instance.basicInfoObj.latestCommand = 'getButtonLabel';
+				sendActionCommand(sendToCommand);
 			},
 		},
 		getPauseButtonLabel: {
-			label: 'Get Label for Pause button',
+			name: 'Get Label for Pause button',
 			options: [],
 			callback: () => {
 				const sendToCommand: any = {
@@ -142,13 +106,13 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 					options: {
 						command: `getPauseButtonLabel`,
 					},
-				}
-				instance.basicInfoObj.latestCommand = 'getPauseButtonLabel'
-				sendActionCommand(sendToCommand)
+				};
+				instance.basicInfoObj.latestCommand = 'getPauseButtonLabel';
+				sendActionCommand(sendToCommand);
 			},
 		},
 		setClickButton: {
-			label: 'Clicks the start or record button',
+			name: 'Clicks the start or record button',
 			options: [],
 			callback: () => {
 				const sendToCommand: any = {
@@ -156,13 +120,13 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 					options: {
 						command: `setClickButton`,
 					},
-				}
-				instance.basicInfoObj.latestCommand = 'setClickButton'
-				sendActionCommand(sendToCommand)
+				};
+				instance.basicInfoObj.latestCommand = 'setClickButton';
+				sendActionCommand(sendToCommand);
 			},
 		},
 		setClickPauseButton: {
-			label: 'Clicks the pause recording button',
+			name: 'Clicks the pause recording button',
 			options: [],
 			callback: () => {
 				const sendToCommand: any = {
@@ -170,14 +134,14 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 					options: {
 						command: `setClickPauseButton`,
 					},
-				}
-				instance.basicInfoObj.latestCommand = 'setClickPauseButton'
-				sendActionCommand(sendToCommand)
+				};
+				instance.basicInfoObj.latestCommand = 'setClickPauseButton';
+				sendActionCommand(sendToCommand);
 			},
 		},
 		// Scenes
 		getSceneList: {
-			label: 'Get Scene list',
+			name: 'Get Scene list',
 			options: [],
 			callback: () => {
 				const sendToCommand: any = {
@@ -185,13 +149,13 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 					options: {
 						command: `getSceneList`,
 					},
-				}
-				instance.basicInfoObj.latestCommand = 'getSceneList'
-				sendActionCommand(sendToCommand)
+				};
+				instance.basicInfoObj.latestCommand = 'getSceneList';
+				sendActionCommand(sendToCommand);
 			},
 		},
 		// getSceneImage: {
-		// 	label: 'Get the Scenes last thumbnail image',
+		// 	name: 'Get the Scenes last thumbnail image',
 		// 	options: [
 		// 		{
 		// 			type: 'textinput',
@@ -212,7 +176,7 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 		// 	},
 		// },
 		getCurrentScene: {
-			label: 'Get UUID of the current Scene',
+			name: 'Get UUID of the current Scene',
 			options: [],
 			callback: () => {
 				const sendToCommand: any = {
@@ -220,13 +184,13 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 					options: {
 						command: `getCurrentScene`,
 					},
-				}
-				instance.basicInfoObj.latestCommand = 'getCurrentScene'
-				sendActionCommand(sendToCommand)
+				};
+				instance.basicInfoObj.latestCommand = 'getCurrentScene';
+				sendActionCommand(sendToCommand);
 			},
 		},
 		setScene: {
-			label: 'Switch to a Scene',
+			name: 'Switch to a Scene',
 			options: [
 				{
 					type: 'dropdown',
@@ -242,13 +206,13 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 					options: {
 						command: `setScene?id=${action.options.UUID}`,
 					},
-				}
-				instance.basicInfoObj.latestCommand = 'setScene'
-				sendActionCommand(sendToCommand)
+				};
+				instance.basicInfoObj.latestCommand = 'setScene';
+				sendActionCommand(sendToCommand);
 			},
 		},
 		setNext: {
-			label: 'Go to next Scene',
+			name: 'Go to next Scene',
 			options: [],
 			callback: () => {
 				const sendToCommand: any = {
@@ -256,13 +220,13 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 					options: {
 						command: `setNext`,
 					},
-				}
-				instance.basicInfoObj.latestCommand = 'setNext'
-				sendActionCommand(sendToCommand)
+				};
+				instance.basicInfoObj.latestCommand = 'setNext';
+				sendActionCommand(sendToCommand);
 			},
 		},
 		setPrev: {
-			label: 'Go to previous Scene',
+			name: 'Go to previous Scene',
 			options: [],
 			callback: () => {
 				const sendToCommand: any = {
@@ -270,14 +234,14 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 					options: {
 						command: `setPrev`,
 					},
-				}
-				instance.basicInfoObj.latestCommand = 'setPrev'
-				sendActionCommand(sendToCommand)
+				};
+				instance.basicInfoObj.latestCommand = 'setPrev';
+				sendActionCommand(sendToCommand);
 			},
 		},
 		// Mute
 		getMute: {
-			label: 'Get mute status',
+			name: 'Get mute status',
 			options: [],
 			callback: () => {
 				const sendToCommand: any = {
@@ -285,13 +249,13 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 					options: {
 						command: `getMute`,
 					},
-				}
-				instance.basicInfoObj.latestCommand = 'getMute'
-				sendActionCommand(sendToCommand)
+				};
+				instance.basicInfoObj.latestCommand = 'getMute';
+				sendActionCommand(sendToCommand);
 			},
 		},
 		setMute: {
-			label: 'Toggles mute status',
+			name: 'Toggles mute status',
 			options: [],
 			callback: () => {
 				const sendToCommand: any = {
@@ -299,14 +263,14 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 					options: {
 						command: `setMute`,
 					},
-				}
-				instance.basicInfoObj.latestCommand = 'setMute'
-				sendActionCommand(sendToCommand)
+				};
+				instance.basicInfoObj.latestCommand = 'setMute';
+				sendActionCommand(sendToCommand);
 			},
 		},
 		// Concurrent Viewers
 		getViewers: {
-			label: 'Get Number of concurrent viewers',
+			name: 'Get Number of concurrent viewers',
 			options: [],
 			callback: () => {
 				const sendToCommand: any = {
@@ -314,14 +278,14 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 					options: {
 						command: `getViewers`,
 					},
-				}
-				instance.basicInfoObj.latestCommand = 'getViewers'
-				sendActionCommand(sendToCommand)
+				};
+				instance.basicInfoObj.latestCommand = 'getViewers';
+				sendActionCommand(sendToCommand);
 			},
 		},
 		// Camera
 		getInputs: {
-			label: 'Get camera inputs',
+			name: 'Get camera inputs',
 			options: [],
 			callback: () => {
 				const sendToCommand: any = {
@@ -329,13 +293,13 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 					options: {
 						command: `getInputs`,
 					},
-				}
-				instance.basicInfoObj.latestCommand = 'getInputs'
-				sendActionCommand(sendToCommand)
+				};
+				instance.basicInfoObj.latestCommand = 'getInputs';
+				sendActionCommand(sendToCommand);
 			},
 		},
 		getDefaultCamera: {
-			label: 'Get default camera',
+			name: 'Get default camera',
 			options: [],
 			callback: () => {
 				const sendToCommand: any = {
@@ -343,13 +307,13 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 					options: {
 						command: `getDefaultCamera`,
 					},
-				}
-				instance.basicInfoObj.latestCommand = 'getDefaultCamera'
-				sendActionCommand(sendToCommand)
+				};
+				instance.basicInfoObj.latestCommand = 'getDefaultCamera';
+				sendActionCommand(sendToCommand);
 			},
 		},
 		setInput: {
-			label: 'Set camera input to use',
+			name: 'Set camera input to use',
 			options: [
 				{
 					type: 'dropdown',
@@ -365,14 +329,14 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 					options: {
 						command: `setInput?id=${action.options.UUID}`,
 					},
-				}
-				instance.basicInfoObj.latestCommand = 'setInput'
-				sendActionCommand(sendToCommand)
+				};
+				instance.basicInfoObj.latestCommand = 'setInput';
+				sendActionCommand(sendToCommand);
 			},
 		},
 		// Source Mode
 		getCurrentMode: {
-			label: 'Get Current source mode (cam | screen | video) ',
+			name: 'Get Current source mode (cam | screen | video) ',
 			options: [],
 			callback: () => {
 				const sendToCommand: any = {
@@ -380,13 +344,13 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 					options: {
 						command: `getCurrentMode`,
 					},
-				}
-				instance.basicInfoObj.latestCommand = 'getCurrentMode'
-				sendActionCommand(sendToCommand)
+				};
+				instance.basicInfoObj.latestCommand = 'getCurrentMode';
+				sendActionCommand(sendToCommand);
 			},
 		},
 		setMode: {
-			label: 'Set Current source mode (cam | screen | video) ',
+			name: 'Set Current source mode (cam | screen | video) ',
 			options: [
 				{
 					label: 'source mode',
@@ -406,14 +370,14 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 					options: {
 						command: `setMode`,
 					},
-				}
-				instance.basicInfoObj.latestCommand = 'setMode'
-				sendActionCommand(sendToCommand)
+				};
+				instance.basicInfoObj.latestCommand = 'setMode';
+				sendActionCommand(sendToCommand);
 			},
 		},
 		// PiP
 		setPIP: {
-			label: 'Toggle PIP visibility',
+			name: 'Toggle PIP visibility',
 			options: [],
 			callback: () => {
 				const sendToCommand: any = {
@@ -421,14 +385,14 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 					options: {
 						command: `setPIP`,
 					},
-				}
-				instance.basicInfoObj.latestCommand = 'setPIP'
-				sendActionCommand(sendToCommand)
+				};
+				instance.basicInfoObj.latestCommand = 'setPIP';
+				sendActionCommand(sendToCommand);
 			},
 		},
 		// Video Playback Mode
 		getVideoList: {
-			label: 'Get recently used video files.',
+			name: 'Get recently used video files.',
 			options: [],
 			callback: () => {
 				const sendToCommand: any = {
@@ -436,13 +400,13 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 					options: {
 						command: `getVideoList`,
 					},
-				}
-				instance.basicInfoObj.latestCommand = 'getVideoList'
-				sendActionCommand(sendToCommand)
+				};
+				instance.basicInfoObj.latestCommand = 'getVideoList';
+				sendActionCommand(sendToCommand);
 			},
 		},
 		// getVideoImage: {
-		// 	label: 'Get Video thumbnail.',
+		// 	name: 'Get Video thumbnail.',
 		// 	options: [
 		// 		{
 		// 			type: 'textinput',
@@ -464,7 +428,7 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 		// },
 		// Overlay
 		getOverlayList: {
-			label: 'Get An array of Overlay info',
+			name: 'Get An array of Overlay info',
 			options: [],
 			callback: () => {
 				const sendToCommand: any = {
@@ -472,13 +436,13 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 					options: {
 						command: `getOverlayList`,
 					},
-				}
-				instance.basicInfoObj.latestCommand = 'getOverlayList'
-				sendActionCommand(sendToCommand)
+				};
+				instance.basicInfoObj.latestCommand = 'getOverlayList';
+				sendActionCommand(sendToCommand);
 			},
 		},
 		// getOverlayImage: {
-		// 	label: 'Get icon: The Overlay’s thumbnail image',
+		// 	name: 'Get icon: The Overlay’s thumbnail image',
 		// 	options: [
 		// 		{
 		// 			type: 'textinput',
@@ -499,7 +463,7 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 		// 	},
 		// },
 		setOverlay: {
-			label: 'Toggle an overlays visibility.',
+			name: 'Toggle an overlays visibility.',
 			options: [
 				{
 					type: 'textinput',
@@ -514,13 +478,13 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 					options: {
 						command: `setOverlay`,
 					},
-				}
-				instance.basicInfoObj.latestCommand = 'setOverlay'
-				sendActionCommand(sendToCommand)
+				};
+				instance.basicInfoObj.latestCommand = 'setOverlay';
+				sendActionCommand(sendToCommand);
 			},
 		},
 		setHideComment: {
-			label: 'Hide the most recent comment Overlay. (Adding in v3.4.)',
+			name: 'Hide the most recent comment Overlay. (Adding in v3.4.)',
 			options: [],
 			callback: () => {
 				const sendToCommand: any = {
@@ -528,14 +492,14 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 					options: {
 						command: `setHideComment`,
 					},
-				}
-				instance.basicInfoObj.latestCommand = 'setHideComment'
-				sendActionCommand(sendToCommand)
+				};
+				instance.basicInfoObj.latestCommand = 'setHideComment';
+				sendActionCommand(sendToCommand);
 			},
 		},
 		// SoundEffects
 		getSoundList: {
-			label: 'Get An array of Sound Effect info',
+			name: 'Get An array of Sound Effect info',
 			options: [],
 			callback: () => {
 				const sendToCommand: any = {
@@ -543,13 +507,13 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 					options: {
 						command: `getSoundList`,
 					},
-				}
-				instance.basicInfoObj.latestCommand = 'getSoundList'
-				sendActionCommand(sendToCommand)
+				};
+				instance.basicInfoObj.latestCommand = 'getSoundList';
+				sendActionCommand(sendToCommand);
 			},
 		},
 		setSound: {
-			label: 'Play a sound',
+			name: 'Play a sound',
 			options: [
 				{
 					type: 'textinput',
@@ -581,13 +545,13 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 					options: {
 						command: `setSound`,
 					},
-				}
-				instance.basicInfoObj.latestCommand = 'setSound'
-				sendActionCommand(sendToCommand)
+				};
+				instance.basicInfoObj.latestCommand = 'setSound';
+				sendActionCommand(sendToCommand);
 			},
 		},
 		setSoundStop: {
-			label: 'Stop the currently playing sound. (Adding in v3.4.)',
+			name: 'Stop the currently playing sound. (Adding in v3.4.)',
 			options: [],
 			callback: () => {
 				const sendToCommand: any = {
@@ -595,13 +559,13 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 					options: {
 						command: `setSoundStop`,
 					},
-				}
-				instance.basicInfoObj.latestCommand = 'setSoundStop'
-				sendActionCommand(sendToCommand)
+				};
+				instance.basicInfoObj.latestCommand = 'setSoundStop';
+				sendActionCommand(sendToCommand);
 			},
 		},
 		setSoundVolume: {
-			label: 'Set Sound volume',
+			name: 'Set Sound volume',
 			options: [
 				{
 					type: 'textinput',
@@ -616,10 +580,15 @@ export function getActions(instance: EcammLiveInstance): CompanionActions {
 					options: {
 						command: `setSoundVolume`,
 					},
-				}
-				instance.basicInfoObj.latestCommand = 'setSoundVolume'
-				sendActionCommand(sendToCommand)
+				};
+				instance.basicInfoObj.latestCommand = 'setSoundVolume';
+				sendActionCommand(sendToCommand);
 			},
 		},
+		getSceneImage: undefined,
+		setVideo: undefined,
+		getOverlayImage: undefined,
+		setPIPsetPIP: undefined
 	}
+	return actions
 }
