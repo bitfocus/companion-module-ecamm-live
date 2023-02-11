@@ -1,26 +1,20 @@
-import instance_skel = require('../../../instance_skel')
-import {
-	CompanionActions,
-	CompanionConfigField,
-	// CompanionFeedbacks,
-	CompanionPreset,
-	CompanionSystem,
-} from '../../../instance_skel_types'
+import { InstanceBase, InstanceStatus, runEntrypoint, SomeCompanionConfigField } from '@companion-module/base'
 import { Config } from './config'
-import { getActions } from './actions'
-import { getConfigFields } from './config'
+import { GetActions } from './actions'
+import { GetConfigFields } from './config'
 import { HTTP } from './http'
-// import { getFeedbacks } from './feedback'
-import { getPresets } from './presets'
-import { Variables } from './variables'
+import { GetPresets } from './presets'
+const { UpdateDefinitions, UpdateVariableValues } = require('./variables')
 
 /**
  * Companion instance class
  */
-class EcammLiveInstance extends instance_skel<Config> {
+class EcammLiveInstance extends InstanceBase<Config> {
 	// Global call settings
-	public variables: Variables | null = null
 	public HTTP: HTTP | null = null
+	public config: Config = {
+		label: '',
+	}
 
 	public basicInfoObj: {
 		latestCommand: string
@@ -87,20 +81,22 @@ class EcammLiveInstance extends instance_skel<Config> {
 	public overlayList: {
 		items: []
 	} = { items: [] }
-
-	constructor(system: CompanionSystem, id: string, config: Config) {
-		super(system, id, config)
-		this.system = system
-		this.config = config
+	/**
+	 * @description constructor
+	 * @param internal
+	 */
+	constructor(internal: unknown) {
+		super(internal)
+		// this.instanceOptions.disableVariableValidation = true
 	}
 
 	/**
 	 * @description triggered on instance being enabled
 	 */
-	public init(): void {
-		this.log('info', `Welcome, module is loading`)
-		this.status(this.STATUS_WARNING, 'Connecting')
-		this.variables = new Variables(this)
+	public async init(config: Config): Promise<void> {
+		this.config = config
+		this.log('info', `Welcome, module ecamm live is loading`)
+		this.updateStatus(InstanceStatus.Connecting, 'Connecting')
 		this.HTTP = new HTTP(this)
 		this.updateInstance()
 	}
@@ -109,24 +105,24 @@ class EcammLiveInstance extends instance_skel<Config> {
 	 * @returns config options
 	 * @description generates the config options available for this instance
 	 */
-	public readonly config_fields = (): CompanionConfigField[] => {
-		return getConfigFields()
+	public getConfigFields(): SomeCompanionConfigField[] {
+		return GetConfigFields()
 	}
 
 	/**
 	 * @param config new configuration data
 	 * @description triggered every time the config for this instance is saved
 	 */
-	public updateConfig(config: Config): void {
-		console.log('changing config!', config)
+	public async configUpdated(config: Config): Promise<void> {
 		this.config = config
+		this.log('debug', 'changing config! ' + config)
 		this.updateInstance()
 	}
 
 	/**
 	 * @description close connections and stop timers/intervals
 	 */
-	public readonly destroy = (): void => {
+	public async destroy(): Promise<void> {
 		this.log('debug', `Instance destroyed: ${this.id}`)
 	}
 
@@ -134,27 +130,25 @@ class EcammLiveInstance extends instance_skel<Config> {
 	 * @description Create and update variables
 	 */
 	public updateVariables(): void {
-		if (this.variables) {
-			console.log('update variables')
-			this.variables.updateDefinitions()
-			this.variables.updateVariables()
-		}
+		UpdateDefinitions(this)
+		UpdateVariableValues(this)
+	}
+	/**
+	 * @description Update variables
+	 */
+	public updateVariableValues(): void {
+		UpdateVariableValues(this)
 	}
 
 	/**
 	 * @description sets actions, presets and feedbacks available for this instance
 	 */
 	public updateInstance(): void {
-		// Cast actions and feedbacks from EcammLive types to Companion types
-		const actions = getActions(this) as CompanionActions
-		// const feedbacks = getFeedbacks(this) as CompanionFeedbacks
-		const presets = [...getPresets(this)] as CompanionPreset[]
-
-		this.setActions(actions)
-		// this.setFeedbackDefinitions(feedbacks)
-		this.setPresetDefinitions(presets)
+		// Actions and presets from EcammLive
+		this.setActionDefinitions(GetActions(this))
+		this.setPresetDefinitions(GetPresets())
 		this.updateVariables()
 	}
 }
 
-export = EcammLiveInstance
+runEntrypoint(EcammLiveInstance, [])

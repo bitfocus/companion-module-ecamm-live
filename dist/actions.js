@@ -1,12 +1,47 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getActions = void 0;
+exports.GetActions = exports.EcammLiveActions = void 0;
+var EcammLiveActions;
+(function (EcammLiveActions) {
+    EcammLiveActions["getSceneImage"] = "getSceneImage";
+    EcammLiveActions["setScene"] = "setScene";
+    EcammLiveActions["setInput"] = "setInput";
+    EcammLiveActions["setMode"] = "setMode";
+    EcammLiveActions["setVideo"] = "setVideo";
+    // getVideoImage= 'getVideoImage',
+    EcammLiveActions["getOverlayImage"] = "getOverlayImage";
+    EcammLiveActions["getDefaultCamera"] = "getDefaultCamera";
+    EcammLiveActions["setOverlay"] = "setOverlay";
+    EcammLiveActions["setSoundVolume"] = "setSoundVolume";
+    EcammLiveActions["getInfo"] = "getInfo";
+    EcammLiveActions["getButtonLabel"] = "getButtonLabel";
+    EcammLiveActions["getPauseButtonLabel"] = "getPauseButtonLabel";
+    EcammLiveActions["setClickButton"] = "setClickButton";
+    EcammLiveActions["setClickPauseButton"] = "setClickPauseButton";
+    EcammLiveActions["getSceneList"] = "getSceneList";
+    EcammLiveActions["getCurrentScene"] = "getCurrentScene";
+    EcammLiveActions["setNext"] = "setNext";
+    EcammLiveActions["setPrev"] = "setPrev";
+    EcammLiveActions["getMute"] = "getMute";
+    EcammLiveActions["setMute"] = "setMute";
+    EcammLiveActions["getViewers"] = "getViewers";
+    EcammLiveActions["getInputs"] = "getInputs";
+    EcammLiveActions["getCurrentMode"] = "getCurrentMode";
+    EcammLiveActions["setPIP"] = "setPIP";
+    EcammLiveActions["setPIPsetPIP"] = "setPIPsetPIP";
+    EcammLiveActions["getVideoList"] = "getVideoList";
+    EcammLiveActions["getOverlayList"] = "getOverlayList";
+    EcammLiveActions["setHideComment"] = "setHideComment";
+    EcammLiveActions["getSoundList"] = "getSoundList";
+    EcammLiveActions["setSound"] = "setSound";
+    EcammLiveActions["setSoundStop"] = "setSoundStop";
+})(EcammLiveActions = exports.EcammLiveActions || (exports.EcammLiveActions = {}));
 /**
  * Main function to create the actions
  * @param instance Give the instance so we can extract data
  * @returns CompanionActions
  */
-function getActions(instance) {
+function GetActions(instance) {
     let CHOICES_SCENES = instance.sceneList.length === 0 ? [{ id: 'none', label: 'no scenes loaded' }] : [];
     instance.sceneList.forEach((scene) => {
         CHOICES_SCENES.push({ id: scene.UUID, label: scene.title });
@@ -26,10 +61,10 @@ function getActions(instance) {
         if (instance.HTTP)
             instance.HTTP.sendCommand(command);
     };
-    return {
+    const actions = {
         // Display Info
         getInfo: {
-            label: 'Get standard info',
+            name: 'Get standard info',
             options: [],
             callback: () => {
                 const sendToCommand = {
@@ -43,7 +78,7 @@ function getActions(instance) {
             },
         },
         getButtonLabel: {
-            label: 'Get Label for Start button',
+            name: 'Get Label for Start button',
             options: [],
             callback: () => {
                 const sendToCommand = {
@@ -57,7 +92,7 @@ function getActions(instance) {
             },
         },
         getPauseButtonLabel: {
-            label: 'Get Label for Pause button',
+            name: 'Get Label for Pause button',
             options: [],
             callback: () => {
                 const sendToCommand = {
@@ -71,7 +106,7 @@ function getActions(instance) {
             },
         },
         setClickButton: {
-            label: 'Clicks the start or record button',
+            name: 'Clicks the start or record button',
             options: [],
             callback: () => {
                 const sendToCommand = {
@@ -85,7 +120,7 @@ function getActions(instance) {
             },
         },
         setClickPauseButton: {
-            label: 'Clicks the pause recording button',
+            name: 'Clicks the pause recording button',
             options: [],
             callback: () => {
                 const sendToCommand = {
@@ -100,7 +135,7 @@ function getActions(instance) {
         },
         // Scenes
         getSceneList: {
-            label: 'Get Scene list',
+            name: 'Get Scene list',
             options: [],
             callback: () => {
                 const sendToCommand = {
@@ -114,7 +149,7 @@ function getActions(instance) {
             },
         },
         // getSceneImage: {
-        // 	label: 'Get the Scenes last thumbnail image',
+        // 	name: 'Get the Scenes last thumbnail image',
         // 	options: [
         // 		{
         // 			type: 'textinput',
@@ -135,7 +170,7 @@ function getActions(instance) {
         // 	},
         // },
         getCurrentScene: {
-            label: 'Get UUID of the current Scene',
+            name: 'Get UUID of the current Scene',
             options: [],
             callback: () => {
                 const sendToCommand = {
@@ -149,7 +184,7 @@ function getActions(instance) {
             },
         },
         setScene: {
-            label: 'Switch to a Scene',
+            name: 'Switch to a Scene',
             options: [
                 {
                     type: 'dropdown',
@@ -171,7 +206,7 @@ function getActions(instance) {
             },
         },
         setNext: {
-            label: 'Go to next Scene',
+            name: 'Go to next Scene',
             options: [],
             callback: () => {
                 const sendToCommand = {
@@ -185,7 +220,7 @@ function getActions(instance) {
             },
         },
         setPrev: {
-            label: 'Go to previous Scene',
+            name: 'Go to previous Scene',
             options: [],
             callback: () => {
                 const sendToCommand = {
@@ -200,7 +235,7 @@ function getActions(instance) {
         },
         // Mute
         getMute: {
-            label: 'Get mute status',
+            name: 'Get mute status',
             options: [],
             callback: () => {
                 const sendToCommand = {
@@ -214,7 +249,7 @@ function getActions(instance) {
             },
         },
         setMute: {
-            label: 'Toggles mute status',
+            name: 'Toggles mute status',
             options: [],
             callback: () => {
                 const sendToCommand = {
@@ -229,7 +264,7 @@ function getActions(instance) {
         },
         // Concurrent Viewers
         getViewers: {
-            label: 'Get Number of concurrent viewers',
+            name: 'Get Number of concurrent viewers',
             options: [],
             callback: () => {
                 const sendToCommand = {
@@ -244,7 +279,7 @@ function getActions(instance) {
         },
         // Camera
         getInputs: {
-            label: 'Get camera inputs',
+            name: 'Get camera inputs',
             options: [],
             callback: () => {
                 const sendToCommand = {
@@ -258,7 +293,7 @@ function getActions(instance) {
             },
         },
         getDefaultCamera: {
-            label: 'Get default camera',
+            name: 'Get default camera',
             options: [],
             callback: () => {
                 const sendToCommand = {
@@ -272,7 +307,7 @@ function getActions(instance) {
             },
         },
         setInput: {
-            label: 'Set camera to use',
+            name: 'Set camera input to use',
             options: [
                 {
                     type: 'dropdown',
@@ -295,7 +330,7 @@ function getActions(instance) {
         },
         // Source Mode
         getCurrentMode: {
-            label: 'Get Current source mode (cam | screen | video) ',
+            name: 'Get Current source mode (cam | screen | video) ',
             options: [],
             callback: () => {
                 const sendToCommand = {
@@ -309,7 +344,7 @@ function getActions(instance) {
             },
         },
         setMode: {
-            label: 'Set Current source mode (cam | screen | video) ',
+            name: 'Set Current source mode (cam | screen | video) ',
             options: [
                 {
                     label: 'source mode',
@@ -336,7 +371,7 @@ function getActions(instance) {
         },
         // PiP
         setPIP: {
-            label: 'Toggle PIP visibility',
+            name: 'Toggle PIP visibility',
             options: [],
             callback: () => {
                 const sendToCommand = {
@@ -351,7 +386,7 @@ function getActions(instance) {
         },
         // Video Playback Mode
         getVideoList: {
-            label: 'Get recently used video files.',
+            name: 'Get recently used video files.',
             options: [],
             callback: () => {
                 const sendToCommand = {
@@ -365,7 +400,7 @@ function getActions(instance) {
             },
         },
         // getVideoImage: {
-        // 	label: 'Get Video thumbnail.',
+        // 	name: 'Get Video thumbnail.',
         // 	options: [
         // 		{
         // 			type: 'textinput',
@@ -387,7 +422,7 @@ function getActions(instance) {
         // },
         // Overlay
         getOverlayList: {
-            label: 'Get An array of Overlay info',
+            name: 'Get An array of Overlay info',
             options: [],
             callback: () => {
                 const sendToCommand = {
@@ -401,7 +436,7 @@ function getActions(instance) {
             },
         },
         // getOverlayImage: {
-        // 	label: 'Get icon: The Overlay’s thumbnail image',
+        // 	name: 'Get icon: The Overlay’s thumbnail image',
         // 	options: [
         // 		{
         // 			type: 'textinput',
@@ -422,7 +457,7 @@ function getActions(instance) {
         // 	},
         // },
         setOverlay: {
-            label: 'Toggle an overlays visibility.',
+            name: 'Toggle an overlays visibility.',
             options: [
                 {
                     type: 'textinput',
@@ -443,7 +478,7 @@ function getActions(instance) {
             },
         },
         setHideComment: {
-            label: 'Hide the most recent comment Overlay. (Adding in v3.4.)',
+            name: 'Hide the most recent comment Overlay. (Adding in v3.4.)',
             options: [],
             callback: () => {
                 const sendToCommand = {
@@ -458,7 +493,7 @@ function getActions(instance) {
         },
         // SoundEffects
         getSoundList: {
-            label: 'Get An array of Sound Effect info',
+            name: 'Get An array of Sound Effect info',
             options: [],
             callback: () => {
                 const sendToCommand = {
@@ -472,7 +507,7 @@ function getActions(instance) {
             },
         },
         setSound: {
-            label: 'Play a sound',
+            name: 'Play a sound',
             options: [
                 {
                     type: 'textinput',
@@ -510,7 +545,7 @@ function getActions(instance) {
             },
         },
         setSoundStop: {
-            label: 'Stop the currently playing sound. (Adding in v3.4.)',
+            name: 'Stop the currently playing sound. (Adding in v3.4.)',
             options: [],
             callback: () => {
                 const sendToCommand = {
@@ -524,7 +559,7 @@ function getActions(instance) {
             },
         },
         setSoundVolume: {
-            label: 'Set Sound volume',
+            name: 'Set Sound volume',
             options: [
                 {
                     type: 'textinput',
@@ -544,6 +579,11 @@ function getActions(instance) {
                 sendActionCommand(sendToCommand);
             },
         },
+        getSceneImage: undefined,
+        setVideo: undefined,
+        getOverlayImage: undefined,
+        setPIPsetPIP: undefined
     };
+    return actions;
 }
-exports.getActions = getActions;
+exports.GetActions = GetActions;

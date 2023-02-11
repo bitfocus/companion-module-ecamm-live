@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HTTP = void 0;
 const urllib_1 = require("urllib");
+const base_1 = require("@companion-module/base");
 const bonjour = require('bonjour')();
 class HTTP {
     constructor(instance) {
@@ -17,11 +18,11 @@ class HTTP {
         this.Connect = () => {
             let p = new Promise((resolve, reject) => {
                 try {
-                    console.log('Search for ecamm live');
+                    this.instance.log('debug', 'Search for ecamm live');
                     bonjour.find({ type: 'ecammliveremote' }, (service) => {
                         this.host = service.host;
                         this.port = service.port;
-                        console.log('connection info', this.host, this.port);
+                        this.instance.log('debug', `Connection info:, ${this.host}, ${this.port}`);
                         resolve('ready for HTTP requests');
                     });
                 }
@@ -33,9 +34,9 @@ class HTTP {
             return p;
         };
         this.processData = (data) => {
-            var _a, _b, _c, _d, _e, _f, _g, _h;
             try {
                 let received = JSON.parse(data);
+                this.instance.log('debug', `Received, ${JSON.stringify(received)}`);
                 switch (this.instance.basicInfoObj.latestCommand) {
                     case 'getInfo':
                         this.instance.basicInfoObj.PauseButtonLabel = received.PauseButtonLabel;
@@ -52,15 +53,15 @@ class HTTP {
                         this.instance.basicInfoObj.LiveDemo = received.LiveDemo;
                         this.instance.basicInfoObj.Viewers = received.Viewers;
                         this.instance.basicInfoObj.MUTE_MOVIE = received.MUTE_MOVIE;
-                        (_a = this.instance.variables) === null || _a === void 0 ? void 0 : _a.updateVariables();
+                        this.instance.updateVariableValues();
                         break;
                     case 'getButtonLabel':
                         this.instance.basicInfoObj.ButtonLabel = received[0];
-                        (_b = this.instance.variables) === null || _b === void 0 ? void 0 : _b.updateVariables();
+                        this.instance.updateVariableValues();
                         break;
                     case 'getPauseButtonLabel':
                         this.instance.basicInfoObj.PauseButtonLabel = received[0];
-                        (_c = this.instance.variables) === null || _c === void 0 ? void 0 : _c.updateVariables();
+                        this.instance.updateVariableValues();
                         break;
                     case 'getSceneList':
                         this.instance.sceneList.length = 0;
@@ -72,15 +73,15 @@ class HTTP {
                         break;
                     case 'getCurrentScene':
                         this.instance.basicInfoObj.CurrentScene = received[0];
-                        (_d = this.instance.variables) === null || _d === void 0 ? void 0 : _d.updateVariables();
+                        this.instance.updateVariableValues();
                         break;
                     case 'getMute':
                         this.instance.basicInfoObj.Mute = received[0];
-                        (_e = this.instance.variables) === null || _e === void 0 ? void 0 : _e.updateVariables();
+                        this.instance.updateVariableValues();
                         break;
                     case 'getViewers':
                         this.instance.basicInfoObj.Viewers = parseInt(received[0]);
-                        (_f = this.instance.variables) === null || _f === void 0 ? void 0 : _f.updateVariables();
+                        this.instance.updateVariableValues();
                         break;
                     case 'getInputs':
                         this.instance.cameraList.length = 0;
@@ -88,11 +89,11 @@ class HTTP {
                         break;
                     case 'getDefaultCamera':
                         this.instance.basicInfoObj.defaultCamera = received[0];
-                        (_g = this.instance.variables) === null || _g === void 0 ? void 0 : _g.updateVariables();
+                        this.instance.updateVariableValues();
                         break;
                     case 'getCurrentMode':
                         this.instance.basicInfoObj.currentSourceMode = received[0];
-                        (_h = this.instance.variables) === null || _h === void 0 ? void 0 : _h.updateVariables();
+                        this.instance.updateVariableValues();
                         break;
                     case 'getVideoList':
                         this.instance.videoList.length = 0;
@@ -109,10 +110,10 @@ class HTTP {
                     // 	// TODO
                     // 	break
                     // case 'getSoundList':
-                    // 	// TODO	
+                    // 	// TODO
                     // 	break
                     default:
-                        console.log('unknown command or need to fill in:', this.instance.basicInfoObj.latestCommand);
+                        console.log('Received unknown response:', this.instance.basicInfoObj.latestCommand);
                         console.log('received:', received);
                         break;
                 }
@@ -133,7 +134,7 @@ class HTTP {
          * @description Check OSC connection status and format command
          */
         this.sendCommand = async (command) => {
-            console.log(`sending: http://${this.host}:${this.port}/${command}`);
+            this.instance.log('debug', `sending: http://${this.host}:${this.port}/${command}`);
             const { data } = await (0, urllib_1.request)(`http://${this.host}:${this.port}/${command}`);
             this.processData(data.toString());
         };
@@ -144,25 +145,25 @@ class HTTP {
             bonjour.destroy();
             this.Connect()
                 .then(() => {
-                this.instance.status(this.instance.STATUS_OK);
+                this.instance.updateStatus(base_1.InstanceStatus.Ok);
                 console.log('Ecamm Live active');
             })
                 .catch(() => {
                 this.instance.log('warn', `Unable to connect, please configure a host and port in the instance configuration`);
-                this.instance.status(this.instance.STATUS_ERROR, 'wrong settings');
+                this.instance.updateStatus(base_1.InstanceStatus.UnknownWarning, 'wrong settings');
             });
         };
         this.instance = instance;
         // Connect
         this.Connect()
             .then(() => {
-            this.instance.status(this.instance.STATUS_OK);
-            console.log('Ecamm Live active');
+            this.instance.updateStatus(base_1.InstanceStatus.Ok);
+            this.instance.log('debug', 'Ecamm Live active');
             this.sendCommand('getInfo');
         })
             .catch(() => {
             this.instance.log('warn', `Unable to connect, please configure a host and port in the instance configuration`);
-            this.instance.status(this.instance.STATUS_ERROR, 'wrong settings');
+            this.instance.updateStatus(base_1.InstanceStatus.UnknownWarning, 'wrong settings');
         });
     }
 }

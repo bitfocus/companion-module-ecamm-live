@@ -1,36 +1,74 @@
-import { CompanionPreset } from '../../../instance_skel_types'
-import EcammLiveInstance from './index'
-import { ActionCallbacks } from './actions'
-// import { FeedbackCallbacks } from './feedback'
+import { combineRgb, CompanionPresetDefinitions, CompanionButtonPresetDefinition } from '@companion-module/base'
+import { EcammLiveActions } from './actions'
 
-export type PresetCategory = 'Select Users' | 'User presets' | 'Global Presets' | 'Special Presets'
-
-interface EcammLivePresetAdditions {
-	category: string
-	actions: ActionCallbacks[]
-	release_actions?: ActionCallbacks[]
-	// feedbacks: FeedbackCallbacks[]
+interface CompanionPresetExt extends CompanionButtonPresetDefinition {
+	feedbacks: Array<{} & CompanionButtonPresetDefinition['feedbacks'][0]>
+	steps: Array<{
+		down: Array<
+			{
+				actionId: EcammLiveActions
+			} & CompanionButtonPresetDefinition['steps'][0]['down'][0]
+		>
+		up: Array<
+			{
+				actionId: EcammLiveActions
+			} & CompanionButtonPresetDefinition['steps'][0]['up'][0]
+		>
+	}>
+}
+interface CompanionPresetDefinitionsExt {
+	[id: string]: CompanionPresetExt | undefined
 }
 
-export type EcammLiveGlobalPreset = Exclude<CompanionPreset, 'category' | 'actions' | 'release_actions' | 'feedbacks'> &
-	EcammLivePresetAdditions
+export function GetPresets(): CompanionPresetDefinitions {
+	const presets: CompanionPresetDefinitionsExt = {}
 
-export function getPresets(instance: EcammLiveInstance): CompanionPreset[] {
-	let presets: CompanionPreset[] = []
-
-	presets.push({
+	presets[`toggleMute`] = {
+		type: 'button',
 		category: 'Basic',
-		label: `Mute`,
-		bank: {
-			style: 'text',
-			text: `Mute`,
+		name: `Toggle Mute`,
+		style: {
+			text: `Toggle Mute`,
 			size: 'auto',
-			color: instance.rgb(255, 255, 255),
-			bgcolor: instance.rgb(0, 0, 0),
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(0, 0, 0),
 		},
-		actions: [{ action: 'setMute', options: {} }],
 		feedbacks: [],
-	})
+		steps: [
+			{
+				down: [
+					{
+						actionId: EcammLiveActions.setMute,
+						options: {},
+					},
+				],
+				up: [],
+			},
+		],
+	}
+	presets[`Go to next Scene`] = {
+		type: 'button',
+		category: 'Basic',
+		name: `Go to next Scene`,
+		style: {
+			text: `Go to next Scene`,
+			size: 'auto',
+			color: combineRgb(255, 255, 255),
+			bgcolor: combineRgb(0, 0, 0),
+		},
+		feedbacks: [],
+		steps: [
+			{
+				down: [
+					{
+						actionId: EcammLiveActions.setNext,
+						options: {},
+					},
+				],
+				up: [],
+			},
+		],
+	}
 
 	return presets
 }

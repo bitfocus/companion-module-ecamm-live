@@ -1,2 +1,4 @@
-package.json
-/LICENSE.md
+node_modules/
+package-lock.json
+/pkg
+/pkg.tgz

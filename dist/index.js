@@ -1,20 +1,26 @@
 "use strict";
-const instance_skel = require("../../../instance_skel");
+Object.defineProperty(exports, "__esModule", { value: true });
+const base_1 = require("@companion-module/base");
 const actions_1 = require("./actions");
 const config_1 = require("./config");
 const http_1 = require("./http");
-// import { getFeedbacks } from './feedback'
 const presets_1 = require("./presets");
-const variables_1 = require("./variables");
+const { UpdateDefinitions, UpdateVariableValues } = require('./variables');
 /**
  * Companion instance class
  */
-class EcammLiveInstance extends instance_skel {
-    constructor(system, id, config) {
-        super(system, id, config);
+class EcammLiveInstance extends base_1.InstanceBase {
+    /**
+     * @description constructor
+     * @param internal
+     */
+    constructor(internal) {
+        super(internal);
         // Global call settings
-        this.variables = null;
         this.HTTP = null;
+        this.config = {
+            label: '',
+        };
         this.basicInfoObj = {
             latestCommand: 'getInfo',
             PauseButtonLabel: 'no info',
@@ -38,63 +44,61 @@ class EcammLiveInstance extends instance_skel {
         this.cameraList = [];
         this.videoList = [];
         this.overlayList = { items: [] };
-        /**
-         * @returns config options
-         * @description generates the config options available for this instance
-         */
-        this.config_fields = () => {
-            return (0, config_1.getConfigFields)();
-        };
-        /**
-         * @description close connections and stop timers/intervals
-         */
-        this.destroy = () => {
-            this.log('debug', `Instance destroyed: ${this.id}`);
-        };
-        this.system = system;
-        this.config = config;
+        // this.instanceOptions.disableVariableValidation = true
     }
     /**
      * @description triggered on instance being enabled
      */
-    init() {
-        this.log('info', `Welcome, module is loading`);
-        this.status(this.STATUS_WARNING, 'Connecting');
-        this.variables = new variables_1.Variables(this);
+    async init(config) {
+        this.config = config;
+        this.log('info', `Welcome, module ecamm live is loading`);
+        this.updateStatus(base_1.InstanceStatus.Connecting, 'Connecting');
         this.HTTP = new http_1.HTTP(this);
         this.updateInstance();
+    }
+    /**
+     * @returns config options
+     * @description generates the config options available for this instance
+     */
+    getConfigFields() {
+        return (0, config_1.GetConfigFields)();
     }
     /**
      * @param config new configuration data
      * @description triggered every time the config for this instance is saved
      */
-    updateConfig(config) {
-        console.log('changing config!', config);
+    async configUpdated(config) {
         this.config = config;
+        this.log('debug', 'changing config! ' + config);
         this.updateInstance();
+    }
+    /**
+     * @description close connections and stop timers/intervals
+     */
+    async destroy() {
+        this.log('debug', `Instance destroyed: ${this.id}`);
     }
     /**
      * @description Create and update variables
      */
     updateVariables() {
-        if (this.variables) {
-            console.log('update variables');
-            this.variables.updateDefinitions();
-            this.variables.updateVariables();
-        }
+        UpdateDefinitions(this);
+        UpdateVariableValues(this);
+    }
+    /**
+     * @description Update variables
+     */
+    updateVariableValues() {
+        UpdateVariableValues(this);
     }
     /**
      * @description sets actions, presets and feedbacks available for this instance
      */
     updateInstance() {
-        // Cast actions and feedbacks from EcammLive types to Companion types
-        const actions = (0, actions_1.getActions)(this);
-        // const feedbacks = getFeedbacks(this) as CompanionFeedbacks
-        const presets = [...(0, presets_1.getPresets)(this)];
-        this.setActions(actions);
-        // this.setFeedbackDefinitions(feedbacks)
-        this.setPresetDefinitions(presets);
+        // Actions and presets from EcammLive
+        this.setActionDefinitions((0, actions_1.GetActions)(this));
+        this.setPresetDefinitions((0, presets_1.GetPresets)());
         this.updateVariables();
     }
 }
-module.exports = EcammLiveInstance;
+(0, base_1.runEntrypoint)(EcammLiveInstance, []);
