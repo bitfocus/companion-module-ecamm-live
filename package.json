@@ -16,13 +16,14 @@
 		"@companion-module/base": "~1.1.1",
 		"bonjour": "^3.5.0",
 		"lodash": "^4.17.21",
+		"node-ts-uuid": "^2.0.4",
 		"urllib": "^3.0.4"
 	},
 	"devDependencies": {
-		"@types/bonjour": "^3.5.10",
-		"@types/lodash": "^4.14.178",
 		"@companion-module/tools": "^0.5.2",
+		"@types/bonjour": "^3.5.10",
 		"@types/jest": "^27.4.0",
+		"@types/lodash": "^4.14.178",
 		"@types/node": "^17.0.12",
 		"@typescript-eslint/eslint-plugin": "^5.10.1",
 		"@typescript-eslint/parser": "^5.10.1",

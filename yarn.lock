@@ -3659,6 +3659,11 @@ node-releases@^2.0.8:
   resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-2.0.9.tgz#fe66405285382b0c4ac6bcfbfbe7e8a510650b4d"
   integrity sha512-2xfmOrRkGogbTK9R6Leda0DGiXeY3p2NJpy4+gNCffdUvV6mdEJnaDEic1i3Ec2djAo8jWYoJMR5PB0MSMpxUA==
 
+node-ts-uuid@^2.0.4:
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/node-ts-uuid/-/node-ts-uuid-2.0.4.tgz#4fecb29660900e7b9e4046202a0a6c4f45e838f6"
+  integrity sha512-AyS3UxwpURnyHpgW+X1DACjaudonNk+5Vpe+nAYgJ7UTmK/pbqmQpOqJb3MFzL1GXB1MUO9SDCA63WuWVCjh1Q==
+
 normalize-path@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/normalize-path/-/normalize-path-3.0.0.tgz#0dcd69ff23a1c9b11fd0978316644a0388216a65"
