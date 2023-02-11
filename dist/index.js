@@ -4,8 +4,7 @@ const base_1 = require("@companion-module/base");
 const actions_1 = require("./actions");
 const config_1 = require("./config");
 const http_1 = require("./http");
-// import { GetFeedbacks } from './feedback'
-// import { GetPresets } from './presets'
+const presets_1 = require("./presets");
 const { UpdateDefinitions, UpdateVariableValues } = require('./variables');
 /**
  * Companion instance class
@@ -20,7 +19,7 @@ class EcammLiveInstance extends base_1.InstanceBase {
         // Global call settings
         this.HTTP = null;
         this.config = {
-            label: ''
+            label: '',
         };
         this.basicInfoObj = {
             latestCommand: 'getInfo',
@@ -96,13 +95,9 @@ class EcammLiveInstance extends base_1.InstanceBase {
      * @description sets actions, presets and feedbacks available for this instance
      */
     updateInstance() {
-        // Cast actions and feedbacks from EcammLive types to Companion types
-        const actions = (0, actions_1.GetActions)(this);
-        // const feedbacks = getFeedbacks(this) as CompanionFeedbacks
-        // const presets = [...getPresets(this)] as CompanionPreset[]
-        this.setActionDefinitions(actions);
-        // this.setFeedbackDefinitions(feedbacks)
-        // this.setPresetDefinitions(presets)
+        // Actions and presets from EcammLive
+        this.setActionDefinitions((0, actions_1.GetActions)(this));
+        this.setPresetDefinitions((0, presets_1.GetPresets)());
         this.updateVariables();
     }
 }
