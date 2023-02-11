@@ -1,21 +1,19 @@
-import { CompanionActionDefinitions, InstanceBase, InstanceStatus, runEntrypoint, SomeCompanionConfigField } from '@companion-module/base'
+import { InstanceBase, InstanceStatus, runEntrypoint, SomeCompanionConfigField } from '@companion-module/base'
 import { Config } from './config'
 import { GetActions } from './actions'
 import { GetConfigFields } from './config'
 import { HTTP } from './http'
-// import { GetFeedbacks } from './feedback'
-// import { GetPresets } from './presets'
+import { GetPresets } from './presets'
 const { UpdateDefinitions, UpdateVariableValues } = require('./variables')
 
 /**
  * Companion instance class
  */
 class EcammLiveInstance extends InstanceBase<Config> {
-	
 	// Global call settings
 	public HTTP: HTTP | null = null
 	public config: Config = {
-		label: ''
+		label: '',
 	}
 
 	public basicInfoObj: {
@@ -95,7 +93,7 @@ class EcammLiveInstance extends InstanceBase<Config> {
 	/**
 	 * @description triggered on instance being enabled
 	 */
-	 public async init(config: Config): Promise<void> {
+	public async init(config: Config): Promise<void> {
 		this.config = config
 		this.log('info', `Welcome, module ecamm live is loading`)
 		this.updateStatus(InstanceStatus.Connecting, 'Connecting')
@@ -107,10 +105,9 @@ class EcammLiveInstance extends InstanceBase<Config> {
 	 * @returns config options
 	 * @description generates the config options available for this instance
 	 */
-	 public getConfigFields(): SomeCompanionConfigField[] {
+	public getConfigFields(): SomeCompanionConfigField[] {
 		return GetConfigFields()
 	}
-
 
 	/**
 	 * @param config new configuration data
@@ -118,7 +115,7 @@ class EcammLiveInstance extends InstanceBase<Config> {
 	 */
 	public async configUpdated(config: Config): Promise<void> {
 		this.config = config
-		this.log('debug','changing config! '+config)
+		this.log('debug', 'changing config! ' + config)
 		this.updateInstance()
 	}
 
@@ -147,14 +144,9 @@ class EcammLiveInstance extends InstanceBase<Config> {
 	 * @description sets actions, presets and feedbacks available for this instance
 	 */
 	public updateInstance(): void {
-		// Cast actions and feedbacks from EcammLive types to Companion types
-		const actions = GetActions(this) as CompanionActionDefinitions
-		// const feedbacks = getFeedbacks(this) as CompanionFeedbacks
-		// const presets = [...getPresets(this)] as CompanionPreset[]
-
-		this.setActionDefinitions(actions)
-		// this.setFeedbackDefinitions(feedbacks)
-		// this.setPresetDefinitions(presets)
+		// Actions and presets from EcammLive
+		this.setActionDefinitions(GetActions(this))
+		this.setPresetDefinitions(GetPresets())
 		this.updateVariables()
 	}
 }
