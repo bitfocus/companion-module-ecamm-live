@@ -110,10 +110,10 @@ class HTTP {
                     // 	// TODO
                     // 	break
                     // case 'getSoundList':
-                    // 	// TODO	
+                    // 	// TODO
                     // 	break
                     default:
-                        console.log('unknown command or need to fill in:', this.instance.basicInfoObj.latestCommand);
+                        console.log('Received unknown response:', this.instance.basicInfoObj.latestCommand);
                         console.log('received:', received);
                         break;
                 }
