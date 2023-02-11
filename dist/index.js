@@ -1,10 +1,11 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const base_1 = require("@companion-module/base");
 const actions_1 = require("./actions");
 const config_1 = require("./config");
 const http_1 = require("./http");
-// import { getFeedbacks } from './feedback'
-// import { getPresets } from './presets'
+// import { GetFeedbacks } from './feedback'
+// import { GetPresets } from './presets'
 const { UpdateDefinitions, UpdateVariableValues } = require('./variables');
 /**
  * Companion instance class
@@ -44,7 +45,7 @@ class EcammLiveInstance extends base_1.InstanceBase {
         this.cameraList = [];
         this.videoList = [];
         this.overlayList = { items: [] };
-        this.instanceOptions.disableVariableValidation = true;
+        // this.instanceOptions.disableVariableValidation = true
     }
     /**
      * @description triggered on instance being enabled
@@ -82,14 +83,14 @@ class EcammLiveInstance extends base_1.InstanceBase {
      * @description Create and update variables
      */
     updateVariables() {
-        UpdateDefinitions();
-        UpdateVariableValues();
+        UpdateDefinitions(this);
+        UpdateVariableValues(this);
     }
     /**
      * @description Update variables
      */
     updateVariableValues() {
-        UpdateVariableValues();
+        UpdateVariableValues(this);
     }
     /**
      * @description sets actions, presets and feedbacks available for this instance
@@ -105,4 +106,4 @@ class EcammLiveInstance extends base_1.InstanceBase {
         this.updateVariables();
     }
 }
-module.exports = EcammLiveInstance;
+(0, base_1.runEntrypoint)(EcammLiveInstance, []);

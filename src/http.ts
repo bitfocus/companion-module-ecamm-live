@@ -1,14 +1,14 @@
-import EcammLiveInstance from '.'
 import { request } from 'urllib'
 import { InstanceStatus } from '@companion-module/base'
+import { Config, InstanceBaseExt } from './config'
 const bonjour = require('bonjour')()
 
 export class HTTP {
-	private readonly instance: EcammLiveInstance
+	private instance: InstanceBaseExt<Config>
 	private host: string = ''
 	private port: number = 0
 
-	constructor(instance: EcammLiveInstance) {
+	constructor(instance: InstanceBaseExt<Config>) {
 		this.instance = instance
 
 		// Connect
@@ -55,7 +55,7 @@ export class HTTP {
 	private processData = (data: string) => {
 		try {
 			let received = JSON.parse(data)
-			this.instance.log('debug',`Received, ${received}`);
+			this.instance.log('debug',`Received, ${JSON.stringify(received)}`);
 			
 			switch (this.instance.basicInfoObj.latestCommand) {
 				case 'getInfo':

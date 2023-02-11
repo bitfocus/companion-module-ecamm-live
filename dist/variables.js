@@ -25,21 +25,21 @@ module.exports = {
     UpdateVariableValues(instance) {
         try {
             const newVariables = {};
-            newVariables[`LatestCommand`] = this.instance.basicInfoObj.latestCommand;
-            newVariables[`PauseButtonLabel`] = this.instance.basicInfoObj.PauseButtonLabel;
-            newVariables[`ButtonLabel`] = this.instance.basicInfoObj.ButtonLabel;
-            newVariables[`Mute`] = this.instance.basicInfoObj.Mute;
-            newVariables[`VOLUME_MOVIE`] = this.instance.basicInfoObj.VOLUME_MOVIE;
-            newVariables[`MUTE_SOUNDEFFECTS`] = this.instance.basicInfoObj.MUTE_SOUNDEFFECTS;
-            newVariables[`MUTE_MIC`] = this.instance.basicInfoObj.MUTE_MIC;
-            newVariables[`VOLUME_MIC`] = this.instance.basicInfoObj.VOLUME_MIC;
-            newVariables[`CurrentScene`] = this.instance.basicInfoObj.CurrentScene;
-            newVariables[`PreviewMode`] = this.instance.basicInfoObj.PreviewMode;
-            newVariables[`HidingUI`] = this.instance.basicInfoObj.HidingUI;
-            newVariables[`VOLUME_SOUNDEFFECTS`] = this.instance.basicInfoObj.VOLUME_SOUNDEFFECTS;
-            newVariables[`LiveDemo`] = this.instance.basicInfoObj.LiveDemo;
-            newVariables[`Viewers`] = this.instance.basicInfoObj.Viewers;
-            newVariables[`MUTE_MOVIE`] = this.instance.basicInfoObj.MUTE_MOVIE;
+            newVariables[`LatestCommand`] = instance.basicInfoObj.latestCommand;
+            newVariables[`PauseButtonLabel`] = instance.basicInfoObj.PauseButtonLabel;
+            newVariables[`ButtonLabel`] = instance.basicInfoObj.ButtonLabel;
+            newVariables[`Mute`] = instance.basicInfoObj.Mute;
+            newVariables[`VOLUME_MOVIE`] = instance.basicInfoObj.VOLUME_MOVIE;
+            newVariables[`MUTE_SOUNDEFFECTS`] = instance.basicInfoObj.MUTE_SOUNDEFFECTS;
+            newVariables[`MUTE_MIC`] = instance.basicInfoObj.MUTE_MIC;
+            newVariables[`VOLUME_MIC`] = instance.basicInfoObj.VOLUME_MIC;
+            newVariables[`CurrentScene`] = instance.basicInfoObj.CurrentScene;
+            newVariables[`PreviewMode`] = instance.basicInfoObj.PreviewMode;
+            newVariables[`HidingUI`] = instance.basicInfoObj.HidingUI;
+            newVariables[`VOLUME_SOUNDEFFECTS`] = instance.basicInfoObj.VOLUME_SOUNDEFFECTS;
+            newVariables[`LiveDemo`] = instance.basicInfoObj.LiveDemo;
+            newVariables[`Viewers`] = instance.basicInfoObj.Viewers;
+            newVariables[`MUTE_MOVIE`] = instance.basicInfoObj.MUTE_MOVIE;
             instance.setVariableValues(newVariables);
         }
         catch (error) {

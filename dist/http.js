@@ -36,7 +36,7 @@ class HTTP {
         this.processData = (data) => {
             try {
                 let received = JSON.parse(data);
-                this.instance.log('debug', `Received, ${received}`);
+                this.instance.log('debug', `Received, ${JSON.stringify(received)}`);
                 switch (this.instance.basicInfoObj.latestCommand) {
                     case 'getInfo':
                         this.instance.basicInfoObj.PauseButtonLabel = received.PauseButtonLabel;

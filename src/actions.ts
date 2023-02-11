@@ -1,5 +1,5 @@
 import { CompanionActionDefinition, CompanionActionDefinitions, CompanionActionEvent } from '@companion-module/base'
-import EcammLiveInstance from './index'
+import { Config, InstanceBaseExt } from './config';
 
 export enum EcammLiveActions {
 	getSceneImage = 'getSceneImage',
@@ -41,15 +41,15 @@ export enum EcammLiveActions {
  * @param instance Give the instance so we can extract data
  * @returns CompanionActions
  */
-export function GetActions(instance: EcammLiveInstance): CompanionActionDefinitions {
+export function GetActions(instance: InstanceBaseExt<Config>): CompanionActionDefinitions {
 	let CHOICES_SCENES: { id: string; label: string }[] =
 		instance.sceneList.length === 0 ? [{ id: 'none', label: 'no scenes loaded' }] : []
-	instance.sceneList.forEach((scene) => {
+	instance.sceneList.forEach((scene: { UUID: any; title: any; }) => {
 		CHOICES_SCENES.push({ id: scene.UUID, label: scene.title })
 	})
 	let CHOICES_CAMERA: { id: string; label: string }[] =
 		instance.cameraList.length === 0 ? [{ id: 'none', label: 'no inputs loaded' }] : []
-	instance.cameraList.forEach((camera) => {
+	instance.cameraList.forEach((camera: { UUID: any; title: any; }) => {
 		CHOICES_CAMERA.push({ id: camera.UUID, label: camera.title })
 	})
 	

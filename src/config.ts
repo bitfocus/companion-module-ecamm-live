@@ -1,5 +1,10 @@
-import { SomeCompanionConfigField } from '@companion-module/base'
+import { InstanceBase, SomeCompanionConfigField } from '@companion-module/base'
 
+export interface InstanceBaseExt<TConfig> extends InstanceBase<TConfig> {
+	[x: string]: any
+	
+	updateVariableValues(): void
+}
 
 export interface Config {
 	label: string

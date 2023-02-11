@@ -1,10 +1,10 @@
-import { CompanionActionDefinitions, InstanceBase, InstanceStatus, SomeCompanionConfigField } from '@companion-module/base'
+import { CompanionActionDefinitions, InstanceBase, InstanceStatus, runEntrypoint, SomeCompanionConfigField } from '@companion-module/base'
 import { Config } from './config'
 import { GetActions } from './actions'
 import { GetConfigFields } from './config'
 import { HTTP } from './http'
-// import { getFeedbacks } from './feedback'
-// import { getPresets } from './presets'
+// import { GetFeedbacks } from './feedback'
+// import { GetPresets } from './presets'
 const { UpdateDefinitions, UpdateVariableValues } = require('./variables')
 
 /**
@@ -89,7 +89,7 @@ class EcammLiveInstance extends InstanceBase<Config> {
 	 */
 	constructor(internal: unknown) {
 		super(internal)
-		this.instanceOptions.disableVariableValidation = true
+		// this.instanceOptions.disableVariableValidation = true
 	}
 
 	/**
@@ -133,14 +133,14 @@ class EcammLiveInstance extends InstanceBase<Config> {
 	 * @description Create and update variables
 	 */
 	public updateVariables(): void {
-		UpdateDefinitions()
-		UpdateVariableValues()
+		UpdateDefinitions(this)
+		UpdateVariableValues(this)
 	}
 	/**
 	 * @description Update variables
 	 */
 	public updateVariableValues(): void {
-		UpdateVariableValues()
+		UpdateVariableValues(this)
 	}
 
 	/**
@@ -159,4 +159,4 @@ class EcammLiveInstance extends InstanceBase<Config> {
 	}
 }
 
-export = EcammLiveInstance
+runEntrypoint(EcammLiveInstance, [])
