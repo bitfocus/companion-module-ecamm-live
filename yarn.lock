@@ -4618,6 +4618,11 @@ utility@0.1.11:
   dependencies:
     address ">=0.0.1"
 
+uuid-generator-ts@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/uuid-generator-ts/-/uuid-generator-ts-1.1.0.tgz#a489477812c163bea3bdacbfca1a2727ca83d407"
+  integrity sha512-Kv4pgpuAoVjb0bpSE6tzXDrjTiJMqNx12NabOXHM5YpU8NWH8SJQ+o1ljLgsgRVX2K7vzxsXUu/9Ck4h/279XQ==
+
 v8-compile-cache@^2.0.3:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/v8-compile-cache/-/v8-compile-cache-2.3.0.tgz#2de19618c66dc247dcfb6f99338035d8245a2cee"
