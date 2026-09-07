@@ -1,31 +1,33 @@
 {
+	"$schema": "../node_modules/@companion-module/base/assets/manifest.schema.json",
 	"id": "ecamm-live",
 	"name": "ecamm-live",
 	"shortname": "ecammlive",
-	"description": "Ecamm Live plugin for companion ",
-	"version": "1.0.0",
+	"description": "Control Ecamm Live on macOS over its Remote Control API",
+	"version": "0.0.0",
 	"license": "MIT",
 	"repository": "https://github.com/bitfocus/companion-module-ecamm-live.git",
 	"bugs": "https://github.com/bitfocus/companion-module-ecamm-live/issues",
 	"maintainers": [
 		{
-			"name": "JeffreyDavidsz",
-			"email": "jeffrey.davidsz@vicreo.eu"
+			"name": "Justin James",
+			"email": "digitaldrummerj@gmail.com"
 		}
 	],
 	"legacyIds": [],
 	"runtime": {
-		"type": "node18",
+		"type": "node22",
 		"api": "nodejs-ipc",
 		"apiVersion": "0.0.0",
-		"entrypoint": "../dist/index.js"
+		"entrypoint": "../dist/main.js"
 	},
 	"manufacturer": "ecamm",
-	"products": [
-		"Live"
-	],
-	"keywords": [
-		"ecamm",
-		"live"
-	]
+	"products": ["Live"],
+	"keywords": ["streaming", "recordings", "podcast", "present"],
+	"bonjourQueries": {
+		"ecammHost": {
+			"type": "ecammliveremote",
+			"protocol": "tcp"
+		}
+	}
 }

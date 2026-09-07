@@ -1,0 +1,102 @@
+[
+	{
+		"addresses": ["fe80::1090:a9de:c1a3:e25e", "192.168.8.118"],
+		"subtypes": [],
+		"ttl": 4500,
+		"lastSeen": 1788189196363,
+		"rawTxt": [
+			{
+				"type": "Buffer",
+				"data": []
+			}
+		],
+		"txt": {},
+		"name": "Ecamm Live Remote (2)",
+		"fqdn": "Ecamm Live Remote (2)._ecammliveremote._tcp.local",
+		"host": "LYNBHs-Mac-Studio.local",
+		"referer": {
+			"address": "192.168.8.118",
+			"family": "IPv4",
+			"port": 5353,
+			"size": 211
+		},
+		"port": 59089,
+		"type": "ecammliveremote",
+		"protocol": "tcp"
+	},
+	{
+		"addresses": ["fe80::c9c:42b6:95b8:d731", "192.168.8.129"],
+		"subtypes": [],
+		"ttl": 4500,
+		"lastSeen": 1788189196398,
+		"rawTxt": [
+			{
+				"type": "Buffer",
+				"data": []
+			}
+		],
+		"txt": {},
+		"name": "Ecamm Live Remote",
+		"fqdn": "Ecamm Live Remote._ecammliveremote._tcp.local",
+		"host": "LYNBHs-Mac-Studio-2.local",
+		"referer": {
+			"address": "192.168.8.129",
+			"family": "IPv4",
+			"port": 5353,
+			"size": 209
+		},
+		"port": 49864,
+		"type": "ecammliveremote",
+		"protocol": "tcp"
+	},
+	{
+		"addresses": ["fe80::1c05:5881:a1d:710a", "192.168.8.199"],
+		"subtypes": [],
+		"ttl": 4500,
+		"lastSeen": 1788189229390,
+		"rawTxt": [
+			{
+				"type": "Buffer",
+				"data": []
+			}
+		],
+		"txt": {},
+		"name": "Ecamm Live Remote",
+		"fqdn": "Ecamm Live Remote._ecammliveremote._tcp.local",
+		"host": "LYNBHs-Mac-Studio-2.local",
+		"referer": {
+			"address": "192.168.8.199",
+			"family": "IPv4",
+			"port": 5353,
+			"size": 209
+		},
+		"port": 49864,
+		"type": "ecammliveremote",
+		"protocol": "tcp"
+	},
+	{
+		"addresses": ["fe80::1090:a9de:c1a3:e25e", "192.168.8.118"],
+		"subtypes": [],
+		"ttl": 4500,
+		"lastSeen": 1788189229400,
+		"rawTxt": [
+			{
+				"type": "Buffer",
+				"data": []
+			}
+		],
+		"txt": {},
+		"name": "Ecamm Live Remote (2)",
+		"fqdn": "Ecamm Live Remote (2)._ecammliveremote._tcp.local",
+		"host": "LYNBHs-Mac-Studio.local",
+		"referer": {
+			"address": "192.168.8.118",
+			"family": "IPv4",
+			"port": 5353,
+			"size": 211
+		},
+		"port": 59089,
+		"type": "ecammliveremote",
+		"protocol": "tcp"
+	}
+]
