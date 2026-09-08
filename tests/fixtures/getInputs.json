@@ -1,0 +1,92 @@
+{
+	"items": [
+		{
+			"title": "Camera A",
+			"UUID": "PLACEHOLDER_CAMERA_000001"
+		},
+		{
+			"title": "Camera B",
+			"UUID": "PLACEHOLDER_CAMERA_000002"
+		},
+		{
+			"title": "Camera C",
+			"UUID": "PLACEHOLDER_CAMERA_000003"
+		},
+		{
+			"title": "ITS Target Camera",
+			"UUID": "C3D4E5F6-A7B8-9012-CDEF-012345678901"
+		},
+		{
+			"title": "ITS Virtual Camera",
+			"UUID": "A1B2C3D4-E5F6-7890-ABCD-EF1234567890"
+		},
+		{
+			"title": "EXAMPLE-MAC.LOCAL (macOS AV Output)",
+			"UUID": "EXAMPLE-MAC.LOCAL (macOS AV Output)"
+		},
+		{
+			"title": "NDI Virtual Camera",
+			"UUID": "44BFACA9-14E5-426E-9DA4-E74B60342021"
+		},
+		{
+			"title": "OBS Virtual Camera",
+			"UUID": "7626645E-4425-469E-9D8B-97E0FA59AC75"
+		},
+		{
+			"title": "RODECaster Video",
+			"UUID": "0x0000000019f7006b"
+		},
+		{
+			"title": "Something Camera",
+			"UUID": "3AC00E9A-DC7A-4A83-BEF7-4B8800000001"
+		},
+		{
+			"title": "Something Desk View Camera",
+			"UUID": "3AC00E9A-DC7A-4A83-BEF7-4B8800000002"
+		},
+		{
+			"title": "Guest 1",
+			"UUID": "GUEST_1"
+		},
+		{
+			"title": "Guest 2",
+			"UUID": "GUEST_2"
+		},
+		{
+			"title": "Guest 3",
+			"UUID": "GUEST_3"
+		},
+		{
+			"title": "Guest 4",
+			"UUID": "GUEST_4"
+		},
+		{
+			"title": "Guest 5",
+			"UUID": "GUEST_5"
+		},
+		{
+			"title": "Guest 6",
+			"UUID": "GUEST_6"
+		},
+		{
+			"title": "Guest 7",
+			"UUID": "GUEST_7"
+		},
+		{
+			"title": "Guest 8",
+			"UUID": "GUEST_8"
+		},
+		{
+			"title": "Guest 9",
+			"UUID": "GUEST_9"
+		},
+		{
+			"title": "Guest 10",
+			"UUID": "GUEST_10"
+		},
+		{
+			"title": "Zoom Active Speaker",
+			"UUID": "ZOOM_ACTIVE_SPEAKER"
+		}
+	]
+}

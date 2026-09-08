@@ -1,0 +1,104 @@
+{
+	"items": [
+		{
+			"Volume": 1,
+			"Locked": false,
+			"Duration": 5.616326332092285,
+			"Action": "stop",
+			"OrigPath": "PRELOADED/Applause",
+			"title": "Applause",
+			"UUID": "2D574CA3-35E4-4945-A347-C47708208196",
+			"CachePath": "/Users/example/Library/Application Support/EcammLive/Sounds/2CE79412-E9CF-4E81-A93E-D01EBB11640A.mp3",
+			"Children": []
+		},
+		{
+			"Volume": 1,
+			"Locked": false,
+			"Duration": 4.937482833862305,
+			"Action": "stop",
+			"OrigPath": "PRELOADED/Ba Da Dum",
+			"title": "Ba Da Dum",
+			"UUID": "30C82154-9F41-4B4E-BC24-F3CB537EC39C",
+			"CachePath": "/Users/example/Library/Application Support/EcammLive/Sounds/A30B4987-8901-4103-90DF-F6E4F435AA23.m4a",
+			"Children": []
+		},
+		{
+			"Volume": 1,
+			"Locked": false,
+			"Duration": 2.063673496246338,
+			"Action": "stop",
+			"OrigPath": "PRELOADED/Bicycle Horn",
+			"title": "Bicycle Horn",
+			"UUID": "6F20CEC2-BF55-4B65-8B85-7F252ED6CFB2",
+			"CachePath": "/Users/example/Library/Application Support/EcammLive/Sounds/6CA93FA9-68D2-4919-B588-D315646F1E47.mp3",
+			"Children": []
+		},
+		{
+			"Volume": 1,
+			"Locked": false,
+			"Duration": 3.0040817260742188,
+			"Action": "stop",
+			"OrigPath": "PRELOADED/DJ Air Horn",
+			"title": "DJ Air Horn",
+			"UUID": "25572239-C8B1-48A2-8ED1-74F843D94AA8",
+			"CachePath": "/Users/example/Library/Application Support/EcammLive/Sounds/1784B4CA-6C47-402E-8A00-2F5550C12BBB.mp3",
+			"Children": []
+		},
+		{
+			"Volume": 1,
+			"Locked": false,
+			"Duration": 3.7679998874664307,
+			"Action": "stop",
+			"OrigPath": "PRELOADED/Glockenspiel",
+			"title": "Glockenspiel",
+			"UUID": "35136B92-48B9-4E03-8D9D-5BE499A11DDC",
+			"CachePath": "/Users/example/Library/Application Support/EcammLive/Sounds/B8C9C3F9-0611-4763-AC19-2ADBC7A8BCDF.mp3",
+			"Children": []
+		},
+		{
+			"Volume": 1,
+			"Locked": false,
+			"Duration": 1.4160000085830688,
+			"Action": "stop",
+			"OrigPath": "PRELOADED/Party Noise Maker",
+			"title": "Party Noise Maker",
+			"UUID": "11E6D446-E306-4268-849A-C0254108AF43",
+			"CachePath": "/Users/example/Library/Application Support/EcammLive/Sounds/19941AE1-F9BB-4CA0-ADA5-D707D15EC749.mp3",
+			"Children": []
+		},
+		{
+			"Volume": 1,
+			"Group": true,
+			"Locked": false,
+			"Duration": 0,
+			"Action": "stop",
+			"title": "Test Group",
+			"UUID": "A8CB4DB1-09CF-451E-846B-B7BAE325B096",
+			"Expanded": true,
+			"Children": [
+				{
+					"Volume": 1,
+					"Locked": false,
+					"Duration": 0,
+					"Action": "stop",
+					"OrigPath": "PRELOADED/Triangle",
+					"title": "Triangle",
+					"UUID": "B109A595-B738-494A-A817-557BD758AC84",
+					"CachePath": "/Users/example/Library/Application Support/EcammLive/Sounds/4FF0A02B-F8DD-4902-818B-9BC20B35CF79.mp3",
+					"Children": []
+				},
+				{
+					"Volume": 1,
+					"Locked": false,
+					"Duration": 0,
+					"Action": "stop",
+					"OrigPath": "PRELOADED/Timpani Roll",
+					"title": "Timpani Roll",
+					"UUID": "985B38E0-7994-4FAE-B677-308799CF6B79",
+					"CachePath": "/Users/example/Library/Application Support/EcammLive/Sounds/1DC3778A-A38D-4EE5-8F20-D95461E20A8A.m4a",
+					"Children": []
+				}
+			]
+		}
+	]
+}
